@@ -7,7 +7,7 @@ iface br0 inet static
 #iface br0 inet6 manual
 
 iface br0 inet6 static
-  address #IPv4HOST#
+  address #IPv6HOST#
   netmask 64
 
 allow-hotplug eth0
