@@ -1,0 +1,14 @@
+[Unit]
+Description=broadwayd
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/usr/bin/broadwayd --port 10000 
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+

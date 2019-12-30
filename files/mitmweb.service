@@ -1,0 +1,14 @@
+[Unit]
+Description=mitmweb service
+After=network.target
+ 
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/sbin/mitmweb.sh
+Restart=on-failure
+RestartSec=5
+ 
+[Install]
+WantedBy=multi-user.target
+

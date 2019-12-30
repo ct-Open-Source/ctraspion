@@ -1,0 +1,10 @@
+../../sbin/* usr/local/sbin
+../../files/prefix_delegation etc/dhcp/dhclient-exit-hooks.d
+../../files/*.png home/pi/public_html
+../../files/*.php home/pi/public_html
+../../files/*.css home/pi/public_html
+../../files/*.js home/pi/public_html
+../../files/*.ico home/pi/public_html
+../../files/*.service etc/systemd/system
+
+

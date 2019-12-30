@@ -1,0 +1,5 @@
+block_global: False
+console_focus_follow: True
+ssl_insecure: True
+stream_websockets: True
+

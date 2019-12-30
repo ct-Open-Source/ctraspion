@@ -1,0 +1,21 @@
+auto br0
+iface br0 inet static
+  bridge_ports wlan0 eth1
+  address 192.168.24.1
+  netmask 255.255.255.0
+
+#iface br0 inet6 manual
+
+iface br0 inet6 static
+  address fd00:24::1
+  netmask 64
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+iface eth0 inet6 auto
+  request_prefix 1
+  dhcp 1
+#  pre-up ifconfig br0 up
+#  pre-up echo 0 > /proc/sys/net/ipv6/conf/eth0/accept_dad
+

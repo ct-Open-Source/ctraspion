@@ -1,0 +1,1046 @@
+diff -Naur wireshark-2.6.8-orig/ui/gtk/capture_dlg.c wireshark-2.6.8-new/ui/gtk/capture_dlg.c
+--- wireshark-2.6.8-orig/ui/gtk/capture_dlg.c	2019-12-08 17:20:59.318321605 +0000
++++ wireshark-2.6.8-new/ui/gtk/capture_dlg.c	2019-12-08 17:18:50.740298551 +0000
+@@ -2874,7 +2874,7 @@
+ 
+   /* Promiscuous mode row */
+   promisc_cb = gtk_check_button_new_with_mnemonic(
+-      "Capture packets in _promiscuous mode");
++      "Capture packets in promiscuous mode");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(promisc_cb),
+                                device.pmode);
+   gtk_widget_set_tooltip_text(promisc_cb,
+@@ -2912,7 +2912,7 @@
+   snap_hb = ws_gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3, FALSE);
+   gtk_box_pack_start (GTK_BOX(left_vb), snap_hb, FALSE, FALSE, 0);
+ 
+-  snap_cb = gtk_check_button_new_with_mnemonic("_Limit each packet to");
++  snap_cb = gtk_check_button_new_with_mnemonic("Limit each packet to");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(snap_cb),
+                                device.has_snaplen);
+   g_signal_connect(snap_cb, "toggled", G_CALLBACK(adjust_snap_sensitivity), NULL);
+@@ -4868,7 +4868,7 @@
+ 
+   gtk_widget_set_sensitive(GTK_WIDGET(all_cb), if_present);
+   /* Promiscuous mode row */
+-  promisc_cb = gtk_check_button_new_with_mnemonic("Use _promiscuous mode on all interfaces");
++  promisc_cb = gtk_check_button_new_with_mnemonic("Use promiscuous mode on all interfaces");
+   if (!global_capture_session.session_started) {
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(promisc_cb), prefs.capture_prom_mode);
+   } else {
+@@ -5010,7 +5010,7 @@
+   row = 0;
+ 
+   /* multiple files row */
+-  multi_files_on_cb = gtk_check_button_new_with_mnemonic("Use _multiple files");
++  multi_files_on_cb = gtk_check_button_new_with_mnemonic("Use multiple files");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(multi_files_on_cb),
+                                global_capture_opts.multi_files_on);
+   g_signal_connect(multi_files_on_cb, "toggled", G_CALLBACK(capture_prep_adjust_sensitivity),
+@@ -5236,7 +5236,7 @@
+ 
+   /* "Update display in real time" row */
+   sync_cb = gtk_check_button_new_with_mnemonic(
+-      "_Update list of packets in real time");
++      "Update list of packets in real time");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(sync_cb),
+                                global_capture_opts.real_time_mode);
+   g_signal_connect(sync_cb, "toggled", G_CALLBACK(capture_prep_adjust_sensitivity), cap_open_w);
+@@ -5246,7 +5246,7 @@
+   gtk_box_pack_start(GTK_BOX (display_vb), sync_cb, FALSE, TRUE, 0);
+ 
+   /* "Auto-scroll live update" row */
+-  auto_scroll_cb = gtk_check_button_new_with_mnemonic("_Automatically scroll during live capture");
++  auto_scroll_cb = gtk_check_button_new_with_mnemonic("Automatically scroll during live capture");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(auto_scroll_cb), auto_scroll_live);
+   gtk_widget_set_tooltip_text(auto_scroll_cb,
+     "This will scroll the \"Packet List\" automatically to the latest captured packet, "
+@@ -5254,7 +5254,7 @@
+   gtk_box_pack_start(GTK_BOX (display_vb), auto_scroll_cb, FALSE, TRUE, 0);
+ 
+   /* "Hide capture info" row */
+-  hide_info_cb = gtk_check_button_new_with_mnemonic("_Hide capture info dialog");
++  hide_info_cb = gtk_check_button_new_with_mnemonic("Hide capture info dialog");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_info_cb), !global_capture_opts.show_info);
+   gtk_widget_set_tooltip_text(hide_info_cb, "Hide the capture info dialog while capturing.");
+   gtk_box_pack_start(GTK_BOX (display_vb), hide_info_cb, FALSE, TRUE, 0);
+@@ -5268,21 +5268,21 @@
+   gtk_container_add(GTK_CONTAINER(resolv_fr), resolv_vb);
+ 
+   m_resolv_cb = gtk_check_button_new_with_mnemonic(
+-                "Resolve _MAC addresses");
++                "Resolve MAC addresses");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(m_resolv_cb),
+                 gbl_resolv_flags.mac_name);
+   gtk_widget_set_tooltip_text(m_resolv_cb, "Perform MAC layer name resolution while capturing.");
+   gtk_box_pack_start(GTK_BOX (resolv_vb), m_resolv_cb, FALSE, TRUE, 0);
+ 
+   n_resolv_cb = gtk_check_button_new_with_mnemonic(
+-                "Resolve _network-layer names");
++                "Resolve network-layer names");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(n_resolv_cb),
+                 gbl_resolv_flags.network_name);
+   gtk_widget_set_tooltip_text(n_resolv_cb, "Perform network layer name resolution while capturing.");
+   gtk_box_pack_start(GTK_BOX (resolv_vb), n_resolv_cb, FALSE, TRUE, 0);
+ 
+   t_resolv_cb = gtk_check_button_new_with_mnemonic(
+-                "Resolve _transport-layer name");
++                "Resolve transport-layer name");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(t_resolv_cb),
+                 gbl_resolv_flags.transport_name);
+   gtk_widget_set_tooltip_text(t_resolv_cb,
+@@ -5290,7 +5290,7 @@
+   gtk_box_pack_start(GTK_BOX (resolv_vb), t_resolv_cb, FALSE, TRUE, 0);
+ 
+   e_resolv_cb = gtk_check_button_new_with_mnemonic(
+-                "Use _external network name resolver");
++                "Use external network name resolver");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(e_resolv_cb),
+                 gbl_resolv_flags.use_external_net_name_resolver);
+   gtk_widget_set_tooltip_text(e_resolv_cb,
+diff -Naur wireshark-2.6.8-orig/ui/gtk/find_dlg.c wireshark-2.6.8-new/ui/gtk/find_dlg.c
+--- wireshark-2.6.8-orig/ui/gtk/find_dlg.c	2019-12-08 17:20:59.328321451 +0000
++++ wireshark-2.6.8-new/ui/gtk/find_dlg.c	2019-12-08 17:18:50.740298551 +0000
+@@ -168,21 +168,21 @@
+   gtk_widget_show(find_type_lb);
+ 
+   /* Filter */
+-  filter_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "_Display filter");
++  filter_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "Display filter");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(filter_rb), !cfile.hex && !cfile.string);
+   gtk_box_pack_start(GTK_BOX(find_type_hb), filter_rb, FALSE, FALSE, 0);
+   gtk_widget_set_tooltip_text(filter_rb, "Search for data by display filter syntax.\ne.g. ip.addr==10.1.1.1");
+   gtk_widget_show(filter_rb);
+ 
+   /* Hex */
+-  hex_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(filter_rb), "_Hex value");
++  hex_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(filter_rb), "Hex value");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hex_rb), cfile.hex);
+   gtk_box_pack_start(GTK_BOX(find_type_hb), hex_rb, FALSE, FALSE, 0);
+   gtk_widget_set_tooltip_text(hex_rb, "Search for data by hex string.\ne.g. fffffda5");
+   gtk_widget_show(hex_rb);
+ 
+   /* ASCII Search */
+-  string_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(filter_rb), "_String");
++  string_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(filter_rb), "String");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(string_rb), cfile.string);
+   gtk_box_pack_start(GTK_BOX(find_type_hb), string_rb, FALSE, FALSE, 0);
+   gtk_widget_set_tooltip_text(string_rb, "Search for data by string value.\ne.g. My String");
+@@ -300,12 +300,12 @@
+   gtk_container_add(GTK_CONTAINER(direction_frame), direction_vb);
+   gtk_widget_show(direction_vb);
+ 
+-  up_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "_Up");
++  up_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "Up");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(up_rb), cfile.dir == SD_BACKWARD);
+   gtk_box_pack_start(GTK_BOX(direction_vb), up_rb, FALSE, FALSE, 0);
+   gtk_widget_show(up_rb);
+ 
+-  down_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(up_rb), "_Down");
++  down_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(up_rb), "Down");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(down_rb), cfile.dir == SD_FORWARD);
+   gtk_box_pack_start(GTK_BOX(direction_vb), down_rb, FALSE, FALSE, 0);
+   gtk_widget_show(down_rb);
+diff -Naur wireshark-2.6.8-orig/ui/gtk/flow_graph.c wireshark-2.6.8-new/ui/gtk/flow_graph.c
+--- wireshark-2.6.8-orig/ui/gtk/flow_graph.c	2019-12-08 17:20:59.328321451 +0000
++++ wireshark-2.6.8-new/ui/gtk/flow_graph.c	2019-12-08 17:18:50.710299012 +0000
+@@ -254,7 +254,7 @@
+ 	gtk_container_add(GTK_CONTAINER(range_fr), range_grid);
+ 
+ 	/* Process all packets */
+-	select_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "_All packets");
++	select_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "All packets");
+ 	gtk_widget_set_tooltip_text (select_all_rb, ("Process all packets"));
+ 	g_signal_connect(select_all_rb, "toggled", G_CALLBACK(toggle_select_all), NULL);
+ 	ws_gtk_grid_attach_extended(GTK_GRID(range_grid), select_all_rb, 0, 0, 1, 1,
+@@ -266,7 +266,7 @@
+ 
+ 	/* Process displayed packets */
+ 	select_displayed_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(select_all_rb),
+-									     "_Displayed packets");
++									     "Displayed packets");
+ 	gtk_widget_set_tooltip_text (select_displayed_rb, ("Process displayed packets"));
+ 	g_signal_connect(select_displayed_rb, "toggled", G_CALLBACK(toggle_select_displayed), NULL);
+ 	ws_gtk_grid_attach_extended(GTK_GRID(range_grid), select_displayed_rb, 0, 1, 1, 1,
+@@ -308,7 +308,7 @@
+ 	gtk_container_add(GTK_CONTAINER(node_addr_fr), node_addr_grid);
+ 
+ 	/* Source / Dest address */
+-	src_dst_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "_Standard source/destination addresses");
++	src_dst_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "Standard source/destination addresses");
+ 	gtk_widget_set_tooltip_text (src_dst_rb,
+ 		("Nodes in the diagram are identified with source and destination addresses"));
+ 	g_signal_connect(src_dst_rb, "toggled", G_CALLBACK(toggle_select_srcdst), NULL);
+@@ -321,7 +321,7 @@
+ 
+ 	/* Network source / dest address */
+ 	net_src_dst_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(src_dst_rb),
+-									"_Network source/destination addresses");
++									"Network source/destination addresses");
+ 	gtk_widget_set_tooltip_text (net_src_dst_rb,
+ 		("Nodes in the diagram are identified with network source and destination addresses"));
+ 	g_signal_connect(net_src_dst_rb, "toggled", G_CALLBACK(toggle_select_netsrcdst), NULL);
+diff -Naur wireshark-2.6.8-orig/ui/gtk/io_stat.c wireshark-2.6.8-new/ui/gtk/io_stat.c
+--- wireshark-2.6.8-orig/ui/gtk/io_stat.c	2019-12-08 17:20:59.338321297 +0000
++++ wireshark-2.6.8-new/ui/gtk/io_stat.c	2019-12-08 17:18:50.740298551 +0000
+@@ -1761,7 +1761,7 @@
+     create_ctrl_menu(io, vbox, "Tick interval:", create_tick_interval_menu_items);
+     create_ctrl_menu(io, vbox, "Pixels per tick:", create_pixels_per_tick_menu_items);
+ 
+-    view_cb = gtk_check_button_new_with_mnemonic("_View as time of day");
++    view_cb = gtk_check_button_new_with_mnemonic("View as time of day");
+     gtk_container_add(GTK_CONTAINER(vbox), view_cb);
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(view_cb), io->view_as_time);
+     g_signal_connect(view_cb, "toggled", G_CALLBACK(view_as_time_toggle_dest), io);
+diff -Naur wireshark-2.6.8-orig/ui/gtk/main_menubar.c wireshark-2.6.8-new/ui/gtk/main_menubar.c
+--- wireshark-2.6.8-orig/ui/gtk/main_menubar.c	2019-12-08 17:20:59.338321297 +0000
++++ wireshark-2.6.8-new/ui/gtk/main_menubar.c	2019-12-08 17:18:50.740298551 +0000
+@@ -1167,48 +1167,48 @@
+  * ad do the UI stuff there.
+  */
+ static const GtkActionEntry capture_menu_entries[] = {
+-   { "/Capture",                    NULL,                               "_Capture",             NULL,            NULL,    NULL },
+-   { "/Capture/Interfaces",         WIRESHARK_STOCK_CAPTURE_INTERFACES, "_Interfaces...",       "<control>I",    NULL,    G_CALLBACK(capture_if_action_cb) },
+-   { "/Capture/Options",            WIRESHARK_STOCK_CAPTURE_OPTIONS,    "_Options...",          "<control>K",    NULL,    G_CALLBACK(capture_prep_action_cb) },
+-   { "/Capture/Start",              WIRESHARK_STOCK_CAPTURE_START,      "_Start",               "<control>E",    NULL,    G_CALLBACK(capture_start_action_cb) },
+-   { "/Capture/Stop",               WIRESHARK_STOCK_CAPTURE_STOP,       "S_top",                "<control>E",    NULL,    G_CALLBACK(capture_stop_action_cb) },
+-   { "/Capture/Restart",            WIRESHARK_STOCK_CAPTURE_RESTART,    "_Restart",             "<control>R",    NULL,    G_CALLBACK(capture_restart_action_cb) },
+-   { "/Capture/CaptureFilters",     WIRESHARK_STOCK_CAPTURE_FILTER,     "Capture _Filters...",  NULL,            NULL,    G_CALLBACK(capture_filters_action_cb) },
++   { "/Capture",                    NULL,                               "Capture",             NULL,            NULL,    NULL },
++   { "/Capture/Interfaces",         WIRESHARK_STOCK_CAPTURE_INTERFACES, "Interfaces...",       NULL,    NULL,    G_CALLBACK(capture_if_action_cb) },
++   { "/Capture/Options",            WIRESHARK_STOCK_CAPTURE_OPTIONS,    "Options...",          NULL,    NULL,    G_CALLBACK(capture_prep_action_cb) },
++   { "/Capture/Start",              WIRESHARK_STOCK_CAPTURE_START,      "Start",               NULL,    NULL,    G_CALLBACK(capture_start_action_cb) },
++   { "/Capture/Stop",               WIRESHARK_STOCK_CAPTURE_STOP,       "Stop",                NULL,    NULL,    G_CALLBACK(capture_stop_action_cb) },
++   { "/Capture/Restart",            WIRESHARK_STOCK_CAPTURE_RESTART,    "Restart",             NULL,    NULL,    G_CALLBACK(capture_restart_action_cb) },
++   { "/Capture/CaptureFilters",     WIRESHARK_STOCK_CAPTURE_FILTER,     "Capture Filters...",  NULL,            NULL,    G_CALLBACK(capture_filters_action_cb) },
+    { "/Capture/RefreshInterfaces",  GTK_STOCK_REFRESH,                  "Refresh Interfaces",   NULL,            NULL,    G_CALLBACK(refresh_interfaces_action_cb) },
+ };
+ #endif
+ 
+ static const GtkActionEntry main_menu_bar_entries[] = {
+   /* Top level */
+-  { "/File",                    NULL,                              "_File",              NULL,                   NULL,           NULL },
+-  { "/Edit",                    NULL,                              "_Edit",              NULL,                   NULL,           NULL },
+-  { "/View",                    NULL,                              "_View",              NULL,                   NULL,           NULL },
+-  { "/Go",                      NULL,                              "_Go",                NULL,                   NULL,           NULL },
+-  { "/Analyze",                 NULL,                              "_Analyze",           NULL,                   NULL,           NULL },
+-  { "/Statistics",              NULL,                              "_Statistics",        NULL,                   NULL,           NULL },
+-  { "/Telephony",               NULL,                              "Telephon_y",         NULL,                   NULL,           NULL },
+-  { "/Tools",                   NULL,                              "_Tools",             NULL,                   NULL,           NULL },
+-  { "/Internals",               NULL,                              "_Internals",         NULL,                   NULL,           NULL },
+-  { "/Help",                    NULL,                              "_Help",              NULL,                   NULL,           NULL },
++  { "/File",                    NULL,                              "File",              NULL,                   NULL,           NULL },
++  { "/Edit",                    NULL,                              "Edit",              NULL,                   NULL,           NULL },
++  { "/View",                    NULL,                              "View",              NULL,                   NULL,           NULL },
++  { "/Go",                      NULL,                              "Go",                NULL,                   NULL,           NULL },
++  { "/Analyze",                 NULL,                              "Analyze",           NULL,                   NULL,           NULL },
++  { "/Statistics",              NULL,                              "Statistics",        NULL,                   NULL,           NULL },
++  { "/Telephony",               NULL,                              "Telephony",         NULL,                   NULL,           NULL },
++  { "/Tools",                   NULL,                              "Tools",             NULL,                   NULL,           NULL },
++  { "/Internals",               NULL,                              "Internals",         NULL,                   NULL,           NULL },
++  { "/Help",                    NULL,                              "Help",              NULL,                   NULL,           NULL },
+ 
+-  { "/File/Open",               GTK_STOCK_OPEN,                    "_Open...",           "<control>O",           "Open a file",  G_CALLBACK(file_open_cmd_cb) },
++  { "/File/Open",               NULL,                    "Open...",           NULL,           "Open a file",  G_CALLBACK(file_open_cmd_cb) },
+   { "/File/OpenRecent",         NULL,                              "Open _Recent",       NULL,                   NULL,           NULL },
+-  { "/File/Merge",              NULL,                              "_Merge...",          NULL,                   NULL,           G_CALLBACK(file_merge_cmd_cb) },
+-  { "/File/ImportFromHexDump",  NULL,                              "_Import from Hex Dump...", NULL,                   NULL,           G_CALLBACK(file_import_cmd_cb) },
+-  { "/File/Close",              GTK_STOCK_CLOSE,                   "_Close",             "<control>W",           NULL,           G_CALLBACK(file_close_cmd_cb) },
++  { "/File/Merge",              NULL,                              "Merge...",          NULL,                   NULL,           G_CALLBACK(file_merge_cmd_cb) },
++  { "/File/ImportFromHexDump",  NULL,                              "Import from Hex Dump...", NULL,                   NULL,           G_CALLBACK(file_import_cmd_cb) },
++  { "/File/Close",              NULL,                   "Close",             NULL,           NULL,           G_CALLBACK(file_close_cmd_cb) },
+ 
+-  { "/File/Save",               WIRESHARK_STOCK_SAVE,              "_Save",              "<control>S",           NULL,           G_CALLBACK(file_save_cmd_cb) },
+-  { "/File/SaveAs",             WIRESHARK_STOCK_SAVE,              "Save _As...",        "<shift><control>S",    NULL,           G_CALLBACK(file_save_as_cmd_cb) },
++  { "/File/Save",               WIRESHARK_STOCK_SAVE,              "Save",              NULL,           NULL,           G_CALLBACK(file_save_cmd_cb) },
++  { "/File/SaveAs",             WIRESHARK_STOCK_SAVE,              "Save As...",        NULL,    NULL,           G_CALLBACK(file_save_as_cmd_cb) },
+ 
+   { "/File/Set",                NULL,                              "File Set",           NULL,                   NULL,           NULL },
+   { "/File/ExportSpecifiedPackets", NULL,         "Export Specified Packets...", NULL,           NULL,           G_CALLBACK(file_export_specified_packets_cmd_cb) },
+   { "/File/ExportPacketDissections",  NULL,                        "Export Packet Dissections", NULL,                   NULL,           NULL },
+-  { "/File/ExportSelectedPacketBytes", NULL,         "Export Selected Packet _Bytes...", "<control>H",           NULL,           G_CALLBACK(savehex_cb) },
++  { "/File/ExportSelectedPacketBytes", NULL,         "Export Selected Packet _Bytes...", NULL,           NULL,           G_CALLBACK(savehex_cb) },
+   { "/File/ExportPDUs",            NULL,                           "Export PDUs to File...",  NULL,                NULL,           G_CALLBACK(export_pdu_show_cb) },
+   { "/File/ExportSSLSessionKeys",  NULL,                   "Export SSL Session Keys...", NULL,                   NULL,           G_CALLBACK(savesslkeys_cb) },
+   { "/File/ExportObjects",      NULL,                              "Export Objects",     NULL,                   NULL,           NULL },
+-  { "/File/Print",              GTK_STOCK_PRINT,                   "_Print...",          "<control>P",           NULL,           G_CALLBACK(file_print_cmd_cb) },
+-  { "/File/Quit",               GTK_STOCK_QUIT,                    "_Quit",              "<control>Q",           NULL,           G_CALLBACK(file_quit_cmd_cb) },
++  { "/File/Print",              GTK_STOCK_PRINT,                   "Print...",          NULL,           NULL,           G_CALLBACK(file_print_cmd_cb) },
++  { "/File/Quit",               NULL,                    "Quit",              NULL,           NULL,           G_CALLBACK(file_quit_cmd_cb) },
+ 
+   { "/File/Set/ListFiles",      WIRESHARK_STOCK_FILE_SET_LIST,     "List Files",         NULL,                   NULL,           G_CALLBACK(fileset_cb) },
+   { "/File/Set/NextFile",       WIRESHARK_STOCK_FILE_SET_NEXT,     "Next File",          NULL,                   NULL,           G_CALLBACK(fileset_next_cb) },
+@@ -1216,23 +1216,23 @@
+ 
+   { "/File/ExportPacketDissections/Text",       NULL,       "as \"Plain _Text\" file...",      NULL,                   NULL,           G_CALLBACK(export_text_cmd_cb) },
+   { "/File/ExportPacketDissections/PostScript", NULL,       "as \"_PostScript\" file...",      NULL,                   NULL,           G_CALLBACK(export_ps_cmd_cb) },
+-  { "/File/ExportPacketDissections/CSV",        NULL,       "as \"_CSV\" (Comma Separated Values packet summary) file...",
++  { "/File/ExportPacketDissections/CSV",        NULL,       "as \"CSV\" (Comma Separated Values packet summary) file...",
+                                                                                          NULL,                   NULL,           G_CALLBACK(export_csv_cmd_cb) },
+-  { "/File/ExportPacketDissections/CArrays",    NULL,       "as \"C _Arrays\" (packet bytes) file...",
++  { "/File/ExportPacketDissections/CArrays",    NULL,       "as \"C Arrays\" (packet bytes) file...",
+                                                                                          NULL,                   NULL,           G_CALLBACK(export_carrays_cmd_cb) },
+-  { "/File/ExportPacketDissections/PSML",       NULL,       "as XML - \"P_SML\" (packet summary) file...",
++  { "/File/ExportPacketDissections/PSML",       NULL,       "as XML - \"PSML\" (packet summary) file...",
+                                                                                          NULL,                   NULL,           G_CALLBACK(export_psml_cmd_cb) },
+-  { "/File/ExportPacketDissections/PDML",       NULL,       "as XML - \"P_DML\" (packet details) file...",
++  { "/File/ExportPacketDissections/PDML",       NULL,       "as XML - \"PDML\" (packet details) file...",
+                                                                                          NULL,                   NULL,           G_CALLBACK(export_pdml_cmd_cb) },
+-  { "/File/ExportPacketDissections/JSON",       NULL,       "as \"_JSON\" file...",
++  { "/File/ExportPacketDissections/JSON",       NULL,       "as \"JSON\" file...",
+                                                                                          NULL,                   NULL,           G_CALLBACK(export_json_cmd_cb) },
+ 
+   { "/Edit/Copy",                         NULL,       "Copy",                            NULL,                   NULL,           NULL },
+ 
+-  { "/Edit/Copy/Description",             NULL,       "Description",                     "<shift><control>D",    NULL,           G_CALLBACK(copy_description_cb) },
+-  { "/Edit/Copy/Fieldname",               NULL,       "Fieldname",                       "<shift><control>F",    NULL,           G_CALLBACK(copy_fieldname_cb) },
+-  { "/Edit/Copy/Value",                   NULL,       "Value",                           "<shift><control>V",    NULL,           G_CALLBACK(copy_value_cb) },
+-  { "/Edit/Copy/AsFilter",                NULL,       "As Filter",                       "<shift><control>C",    NULL,           G_CALLBACK(copy_as_filter_cb) },
++  { "/Edit/Copy/Description",             NULL,       "Description",                     NULL,    NULL,           G_CALLBACK(copy_description_cb) },
++  { "/Edit/Copy/Fieldname",               NULL,       "Fieldname",                       NULL,    NULL,           G_CALLBACK(copy_fieldname_cb) },
++  { "/Edit/Copy/Value",                   NULL,       "Value",                           NULL,    NULL,           G_CALLBACK(copy_value_cb) },
++  { "/Edit/Copy/AsFilter",                NULL,       "As Filter",                       NULL,    NULL,           G_CALLBACK(copy_as_filter_cb) },
+ 
+ #if 0
+     /*
+@@ -1274,103 +1274,103 @@
+      * We would only want Cut, Paste, Undo, and Redo for the packet
+      * list and packet detail panes if we support modifying them.
+      */
+-    {"/Edit/_Undo", "<control>Z", NULL,
++    {"/Edit/Undo", NULL, NULL,
+                              0, "<StockItem>", GTK_STOCK_UNDO,},
+-    {"/Edit/_Redo", "<shift><control>Z", NULL,
++    {"/Edit/Redo", NULL, NULL,
+                              0, "<StockItem>", GTK_STOCK_REDO,},
+     {"/Edit/<separator>", NULL, NULL, 0, "<Separator>", NULL,},
+-    {"/Edit/Cu_t", "<control>X", NULL,
++    {"/Edit/Cut", NULL, NULL,
+                              0, "<StockItem>", GTK_STOCK_CUT,},
+-    {"/Edit/_Copy", "<control>C", NULL,
++    {"/Edit/Copy", NULL, NULL,
+                              0, "<StockItem>", GTK_STOCK_COPY,},
+-    {"/Edit/_Paste", "<control>V", NULL,
++    {"/Edit/Paste", NULL, NULL,
+                              0, "<StockItem>", GTK_STOCK_PASTE,},
+     {"/Edit/<separator>", NULL, NULL, 0, "<Separator>", NULL,},
+-    {"/Edit/Select _All", "<control>A", NULL, 0,
++    {"/Edit/Select All", NULL, NULL, 0,
+                              "<StockItem>", GTK_STOCK_SELECT_ALL,},
+ #endif /* 0 */
+-   { "/Edit/FindPacket",                GTK_STOCK_FIND,     "_Find Packet...",                      "<control>F",           NULL,           G_CALLBACK(find_frame_cb) },
+-   { "/Edit/FindNext",                  NULL,               "Find Ne_xt",                           "<control>N",           NULL,           G_CALLBACK(find_next_cb) },
+-   { "/Edit/FindPrevious",              NULL,               "Find Pre_vious",                       "<control>B",           NULL,           G_CALLBACK(find_previous_cb) },
++   { "/Edit/FindPacket",                NULL,     "Find Packet...",                      NULL,           NULL,           G_CALLBACK(find_frame_cb) },
++   { "/Edit/FindNext",                  NULL,               "Find Next",                           NULL,           NULL,           G_CALLBACK(find_next_cb) },
++   { "/Edit/FindPrevious",              NULL,               "Find Previous",                       NULL,           NULL,           G_CALLBACK(find_previous_cb) },
+ 
+-   { "/Edit/MarkPacket",                NULL,               "_Mark/Unmark Packet",                  "<control>M",           NULL,           G_CALLBACK(packet_list_mark_frame_cb) },
++   { "/Edit/MarkPacket",                NULL,               "Mark/Unmark Packet",                  NULL,           NULL,           G_CALLBACK(packet_list_mark_frame_cb) },
+    /* XXX - Unused. Should this and its associated code be removed? */
+-   { "/Edit/ToggleMarkingOfAllDisplayedPackets",    NULL,   "Toggle Marking of All Displayed Packets",  "<shift><alt><control>M",           NULL,           G_CALLBACK(packet_list_toggle_mark_all_displayed_frames_cb) },
+-   { "/Edit/MarkAllDisplayedPackets",   NULL,               "Mark All Displayed Packets",           "<shift><control>M",    NULL,           G_CALLBACK(packet_list_mark_all_displayed_frames_cb) },
+-   { "/Edit/UnmarkAllDisplayedPackets", NULL,               "_Unmark All Displayed Packets",        "<alt><control>M",      NULL,           G_CALLBACK(packet_list_unmark_all_displayed_frames_cb) },
+-   { "/Edit/FindNextMark",              NULL,               "Next Mark",                            "<shift><control>N",    NULL,           G_CALLBACK(find_next_mark_cb) },
+-   { "/Edit/FindPreviousMark",          NULL,               "Previous Mark",                        "<shift><control>B",    NULL,           G_CALLBACK(find_prev_mark_cb) },
++   { "/Edit/ToggleMarkingOfAllDisplayedPackets",    NULL,   "Toggle Marking of All Displayed Packets",  NULL,           NULL,           G_CALLBACK(packet_list_toggle_mark_all_displayed_frames_cb) },
++   { "/Edit/MarkAllDisplayedPackets",   NULL,               "Mark All Displayed Packets",           NULL,    NULL,           G_CALLBACK(packet_list_mark_all_displayed_frames_cb) },
++   { "/Edit/UnmarkAllDisplayedPackets", NULL,               "Unmark All Displayed Packets",        NULL,      NULL,           G_CALLBACK(packet_list_unmark_all_displayed_frames_cb) },
++   { "/Edit/FindNextMark",              NULL,               "Next Mark",                            NULL,    NULL,           G_CALLBACK(find_next_mark_cb) },
++   { "/Edit/FindPreviousMark",          NULL,               "Previous Mark",                        NULL,    NULL,           G_CALLBACK(find_prev_mark_cb) },
+ 
+-   { "/Edit/IgnorePacket",              NULL,               "_Ignore/Unignore Packet",              "<control>D",           NULL,           G_CALLBACK(packet_list_ignore_frame_cb) },
++   { "/Edit/IgnorePacket",              NULL,               "Ignore/Unignore Packet",              NULL,           NULL,           G_CALLBACK(packet_list_ignore_frame_cb) },
+     /*
+      * XXX - this next one overrides /Edit/Copy/Description
+      */
+-   { "/Edit/IgnoreAllDisplayedPackets", NULL,               "Ignore All Displayed Packets",         "<shift><control>D",        NULL,           G_CALLBACK(packet_list_ignore_all_displayed_frames_cb) },
+-   { "/Edit/Un-IgnoreAllPackets",       NULL,               "U_nignore All Packets",                "<alt><control>D",          NULL,           G_CALLBACK(packet_list_unignore_all_frames_cb) },
+-   { "/Edit/SetTimeReference",          WIRESHARK_STOCK_TIME,   "Set/Unset Time Reference",         "<control>T",           NULL,           G_CALLBACK(set_reftime_cb) },
+-   { "/Edit/Un-TimeReferenceAllPackets",NULL,               "Unset All Time References",            "<alt><control>T",          NULL,           G_CALLBACK(packet_list_untime_reference_all_frames_cb) },
+-   { "/Edit/FindNextTimeReference",     NULL,               "Next Time Reference",                  "<alt><control>N",          NULL,           G_CALLBACK(find_next_ref_time_cb) },
+-   { "/Edit/FindPreviousTimeReference", NULL,               "Previous Time Reference",              "<alt><control>B",          NULL,           G_CALLBACK(find_previous_ref_time_cb) },
+-   { "/Edit/TimeShift",             WIRESHARK_STOCK_TIME,   "Time Shift...",                        "<shift><control>T",        NULL,           G_CALLBACK(time_shift_cb) },
+-
+-   { "/Edit/ConfigurationProfiles", NULL,                   "_Configuration Profiles...",           "<shift><control>A",        NULL,           G_CALLBACK(profile_dialog_cb) },
+-   { "/Edit/Preferences",           GTK_STOCK_PREFERENCES,  "_Preferences...",                      "<shift><control>P",        NULL,           G_CALLBACK(menus_prefs_cb) },
+-   { "/Edit/AddEditPktComment",         WIRESHARK_STOCK_EDIT,   "Packet Comment...",                "<alt><control>C",          NULL,           G_CALLBACK(edit_packet_comment_dlg) },
+-   { "/Edit/AddEditCaptureComment",     NULL,                   "Capture Comment...",               "<shift><alt><control>C",   NULL,           G_CALLBACK(edit_capture_comment_dlg_launch) },
++   { "/Edit/IgnoreAllDisplayedPackets", NULL,               "Ignore All Displayed Packets",         NULL,        NULL,           G_CALLBACK(packet_list_ignore_all_displayed_frames_cb) },
++   { "/Edit/Un-IgnoreAllPackets",       NULL,               "Unignore All Packets",                NULL,          NULL,           G_CALLBACK(packet_list_unignore_all_frames_cb) },
++   { "/Edit/SetTimeReference",          WIRESHARK_STOCK_TIME,   "Set/Unset Time Reference",         NULL,           NULL,           G_CALLBACK(set_reftime_cb) },
++   { "/Edit/Un-TimeReferenceAllPackets",NULL,               "Unset All Time References",            NULL,          NULL,           G_CALLBACK(packet_list_untime_reference_all_frames_cb) },
++   { "/Edit/FindNextTimeReference",     NULL,               "Next Time Reference",                  NULL,          NULL,           G_CALLBACK(find_next_ref_time_cb) },
++   { "/Edit/FindPreviousTimeReference", NULL,               "Previous Time Reference",              NULL,          NULL,           G_CALLBACK(find_previous_ref_time_cb) },
++   { "/Edit/TimeShift",             WIRESHARK_STOCK_TIME,   "Time Shift...",                        NULL,        NULL,           G_CALLBACK(time_shift_cb) },
++
++   { "/Edit/ConfigurationProfiles", NULL,                   "Configuration Profiles...",           NULL,        NULL,           G_CALLBACK(profile_dialog_cb) },
++   { "/Edit/Preferences",           GTK_STOCK_PREFERENCES,  "Preferences...",                      NULL,        NULL,           G_CALLBACK(menus_prefs_cb) },
++   { "/Edit/AddEditPktComment",         WIRESHARK_STOCK_EDIT,   "Packet Comment...",                NULL,          NULL,           G_CALLBACK(edit_packet_comment_dlg) },
++   { "/Edit/AddEditCaptureComment",     NULL,                   "Capture Comment...",               NULL,   NULL,           G_CALLBACK(edit_capture_comment_dlg_launch) },
+ 
+-   { "/View/TimeDisplayFormat",     NULL,                   "_Time Display Format",                  NULL,                      NULL,           NULL },
++   { "/View/TimeDisplayFormat",     NULL,                   "Time Display Format",                  NULL,                      NULL,           NULL },
+ 
+    { "/View/NameResolution",                    NULL,        "Name Resol_ution",                     NULL,                      NULL,           NULL },
+-   { "/View/NameResolution/ResolveName",        NULL,        "_Resolve Name",                        NULL,                      NULL,           G_CALLBACK(resolve_name_cb) },
++   { "/View/NameResolution/ResolveName",        NULL,        "Resolve Name",                        NULL,                      NULL,           G_CALLBACK(resolve_name_cb) },
+    { "/View/NameResolution/ManuallyResolveName",NULL,        "Manually Resolve Name",                NULL,                      NULL,           G_CALLBACK(manual_addr_resolv_dlg) },
+ 
+-   { "/View/ZoomIn",                GTK_STOCK_ZOOM_IN,      "_Zoom In",                             "<control>plus",            NULL,           G_CALLBACK(view_zoom_in_cb) },
+-   { "/View/ZoomOut",               GTK_STOCK_ZOOM_OUT,     "Zoom _Out",                            "<control>minus",           NULL,           G_CALLBACK(view_zoom_out_cb) },
+-   { "/View/NormalSize",            GTK_STOCK_ZOOM_100,     "_Normal Size",                         "<control>equal",           NULL,           G_CALLBACK(view_zoom_100_cb) },
+-   { "/View/ResizeAllColumns",      WIRESHARK_STOCK_RESIZE_COLUMNS, "Resize All Columns",           "<shift><control>R",        NULL,           G_CALLBACK(packet_list_resize_columns_cb) },
++   { "/View/ZoomIn",                GTK_STOCK_ZOOM_IN,      "Zoom In",                             NULL,            NULL,           G_CALLBACK(view_zoom_in_cb) },
++   { "/View/ZoomOut",               GTK_STOCK_ZOOM_OUT,     "Zoom _Out",                            NULL,           NULL,           G_CALLBACK(view_zoom_out_cb) },
++   { "/View/NormalSize",            GTK_STOCK_ZOOM_100,     "Normal Size",                         NULL,           NULL,           G_CALLBACK(view_zoom_100_cb) },
++   { "/View/ResizeAllColumns",      WIRESHARK_STOCK_RESIZE_COLUMNS, "Resize All Columns",           NULL,        NULL,           G_CALLBACK(packet_list_resize_columns_cb) },
+    { "/View/DisplayedColumns",      NULL,                   "Displayed Columns",                    NULL,                       NULL,           NULL },
+-   { "/View/ExpandSubtrees",        NULL,                   "E_xpand Subtrees",                      "<shift>Right",             NULL,           G_CALLBACK(expand_tree_cb) },
+-   { "/View/CollapseSubtrees",      NULL,                   "Collapse Subtrees",                     "<shift>Left",              NULL,           G_CALLBACK(collapse_tree_cb) },
+-   { "/View/ExpandAll",             NULL,                   "_Expand All",                           "<control>Right",           NULL,           G_CALLBACK(expand_all_cb) },
+-   { "/View/CollapseAll",           NULL,                   "Collapse _All",                         "<control>Left",            NULL,           G_CALLBACK(collapse_all_cb) },
++   { "/View/ExpandSubtrees",        NULL,                   "Expand Subtrees",                      NULL,             NULL,           G_CALLBACK(expand_tree_cb) },
++   { "/View/CollapseSubtrees",      NULL,                   "Collapse Subtrees",                     NULL,              NULL,           G_CALLBACK(collapse_tree_cb) },
++   { "/View/ExpandAll",             NULL,                   "Expand All",                           NULL,           NULL,           G_CALLBACK(expand_all_cb) },
++   { "/View/CollapseAll",           NULL,                   "Collapse _All",                         NULL,            NULL,           G_CALLBACK(collapse_all_cb) },
+    { "/View/ColorizeConversation",  NULL,                   "Colorize Conversation",NULL,                   NULL,           NULL },
+ 
+-   { "/View/ColorizeConversation/Color 1",  WIRESHARK_STOCK_COLOR1, "Color 1",                  "<control>1", NULL, G_CALLBACK(view_menu_color_conv_color1_cb) },
+-   { "/View/ColorizeConversation/Color 2",  WIRESHARK_STOCK_COLOR2, "Color 2",                  "<control>2", NULL, G_CALLBACK(view_menu_color_conv_color2_cb) },
+-   { "/View/ColorizeConversation/Color 3",  WIRESHARK_STOCK_COLOR3, "Color 3",                  "<control>3", NULL, G_CALLBACK(view_menu_color_conv_color3_cb) },
+-   { "/View/ColorizeConversation/Color 4",  WIRESHARK_STOCK_COLOR4, "Color 4",                  "<control>4", NULL, G_CALLBACK(view_menu_color_conv_color4_cb) },
+-   { "/View/ColorizeConversation/Color 5",  WIRESHARK_STOCK_COLOR5, "Color 5",                  "<control>5", NULL, G_CALLBACK(view_menu_color_conv_color5_cb) },
+-   { "/View/ColorizeConversation/Color 6",  WIRESHARK_STOCK_COLOR6, "Color 6",                  "<control>6", NULL, G_CALLBACK(view_menu_color_conv_color6_cb) },
+-   { "/View/ColorizeConversation/Color 7",  WIRESHARK_STOCK_COLOR7, "Color 7",                  "<control>7", NULL, G_CALLBACK(view_menu_color_conv_color7_cb) },
+-   { "/View/ColorizeConversation/Color 8",  WIRESHARK_STOCK_COLOR8, "Color 8",                  "<control>8", NULL, G_CALLBACK(view_menu_color_conv_color8_cb) },
+-   { "/View/ColorizeConversation/Color 9",  WIRESHARK_STOCK_COLOR9, "Color 9",                  "<control>9", NULL, G_CALLBACK(view_menu_color_conv_color9_cb) },
+-   { "/View/ColorizeConversation/Color 10", WIRESHARK_STOCK_COLOR0, "Color 10",                 "<control>0", NULL, G_CALLBACK(view_menu_color_conv_color10_cb) },
++   { "/View/ColorizeConversation/Color 1",  WIRESHARK_STOCK_COLOR1, "Color 1",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color1_cb) },
++   { "/View/ColorizeConversation/Color 2",  WIRESHARK_STOCK_COLOR2, "Color 2",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color2_cb) },
++   { "/View/ColorizeConversation/Color 3",  WIRESHARK_STOCK_COLOR3, "Color 3",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color3_cb) },
++   { "/View/ColorizeConversation/Color 4",  WIRESHARK_STOCK_COLOR4, "Color 4",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color4_cb) },
++   { "/View/ColorizeConversation/Color 5",  WIRESHARK_STOCK_COLOR5, "Color 5",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color5_cb) },
++   { "/View/ColorizeConversation/Color 6",  WIRESHARK_STOCK_COLOR6, "Color 6",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color6_cb) },
++   { "/View/ColorizeConversation/Color 7",  WIRESHARK_STOCK_COLOR7, "Color 7",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color7_cb) },
++   { "/View/ColorizeConversation/Color 8",  WIRESHARK_STOCK_COLOR8, "Color 8",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color8_cb) },
++   { "/View/ColorizeConversation/Color 9",  WIRESHARK_STOCK_COLOR9, "Color 9",                  NULL, NULL, G_CALLBACK(view_menu_color_conv_color9_cb) },
++   { "/View/ColorizeConversation/Color 10", WIRESHARK_STOCK_COLOR0, "Color 10",                 NULL, NULL, G_CALLBACK(view_menu_color_conv_color10_cb) },
+    { "/View/ColorizeConversation/NewColoringRule",  NULL,           "New Coloring Rule...",     NULL,         NULL, G_CALLBACK(view_menu_color_conv_new_rule_cb) },
+ 
+-   { "/View/ResetColoring1-10",     NULL,                   "Reset Coloring 1-10",              "<control>space",               NULL,               G_CALLBACK(view_menu_reset_coloring_cb) },
+-   { "/View/ColoringRules",         GTK_STOCK_SELECT_COLOR, "_Coloring Rules...",               NULL,                           NULL,               G_CALLBACK(color_display_cb) },
++   { "/View/ResetColoring1-10",     NULL,                   "Reset Coloring 1-10",              NULL,               NULL,               G_CALLBACK(view_menu_reset_coloring_cb) },
++   { "/View/ColoringRules",         GTK_STOCK_SELECT_COLOR, "Coloring Rules...",               NULL,                           NULL,               G_CALLBACK(color_display_cb) },
+    { "/View/ShowPacketinNewWindow", NULL,                   "Show Packet in New _Window",       NULL,                           NULL,               G_CALLBACK(new_window_cb) },
+-   { "/View/Reload",                GTK_STOCK_REFRESH,      "_Reload",                          "<control>R",                   NULL,               G_CALLBACK(file_reload_cmd_cb) },
++   { "/View/Reload",                GTK_STOCK_REFRESH,      "Reload",                          NULL,                   NULL,               G_CALLBACK(file_reload_cmd_cb) },
+ 
+ 
+-   { "/Go/Back",                    GTK_STOCK_GO_BACK,      "_Back",                            "<alt>Left",                    NULL,               G_CALLBACK(history_back_cb) },
+-   { "/Go/Forward",                 GTK_STOCK_GO_FORWARD,   "_Forward",                         "<alt>Right",                   NULL,               G_CALLBACK(history_forward_cb) },
+-   { "/Go/Goto",                    GTK_STOCK_JUMP_TO,      "_Go to Packet...",                 "<control>G",                   NULL,               G_CALLBACK(goto_frame_cb) },
+-   { "/Go/GotoCorrespondingPacket", NULL,                   "Go to _Corresponding Packet",      NULL,                           NULL,               G_CALLBACK(goto_framenum_cb) },
+-   { "/Go/PreviousPacket",          GTK_STOCK_GO_UP,        "Previous Packet",                  "<control>Up",                  NULL,               G_CALLBACK(goto_previous_frame_cb) },
+-   { "/Go/NextPacket",              GTK_STOCK_GO_DOWN,      "Next Packet",                      "<control>Down",                NULL,               G_CALLBACK(goto_next_frame_cb) },
+-   { "/Go/FirstPacket",             GTK_STOCK_GOTO_TOP,     "F_irst Packet",                    "<control>Home",                NULL,               G_CALLBACK(goto_top_frame_cb) },
+-   { "/Go/LastPacket",              GTK_STOCK_GOTO_BOTTOM,  "_Last Packet",                     "<control>End",                 NULL,               G_CALLBACK(goto_bottom_frame_cb) },
+-   { "/Go/PreviousPacketInConversation",            GTK_STOCK_GO_UP,        "Previous Packet In Conversation",                  "<control>comma",                   NULL,               G_CALLBACK(goto_previous_frame_conversation_cb) },
+-   { "/Go/NextPacketInConversation",                GTK_STOCK_GO_DOWN,      "Next Packet In Conversation",                      "<control>period",              NULL,               G_CALLBACK(goto_next_frame_conversation_cb) },
++   { "/Go/Back",                    GTK_STOCK_GO_BACK,      "Back",                            NULL,                    NULL,               G_CALLBACK(history_back_cb) },
++   { "/Go/Forward",                 GTK_STOCK_GO_FORWARD,   "Forward",                         NULL,                   NULL,               G_CALLBACK(history_forward_cb) },
++   { "/Go/Goto",                    GTK_STOCK_JUMP_TO,      "Go to Packet...",                 NULL,                   NULL,               G_CALLBACK(goto_frame_cb) },
++   { "/Go/GotoCorrespondingPacket", NULL,                   "Go to Corresponding Packet",      NULL,                           NULL,               G_CALLBACK(goto_framenum_cb) },
++   { "/Go/PreviousPacket",          GTK_STOCK_GO_UP,        "Previous Packet",                  NULL,                  NULL,               G_CALLBACK(goto_previous_frame_cb) },
++   { "/Go/NextPacket",              GTK_STOCK_GO_DOWN,      "Next Packet",                      NULL,                NULL,               G_CALLBACK(goto_next_frame_cb) },
++   { "/Go/FirstPacket",             GTK_STOCK_GOTO_TOP,     "First Packet",                    NULL,                NULL,               G_CALLBACK(goto_top_frame_cb) },
++   { "/Go/LastPacket",              GTK_STOCK_GOTO_BOTTOM,  "Last Packet",                     NULL,                 NULL,               G_CALLBACK(goto_bottom_frame_cb) },
++   { "/Go/PreviousPacketInConversation",            GTK_STOCK_GO_UP,        "Previous Packet In Conversation",                  NULL,                   NULL,               G_CALLBACK(goto_previous_frame_conversation_cb) },
++   { "/Go/NextPacketInConversation",                GTK_STOCK_GO_DOWN,      "Next Packet In Conversation",                      NULL,              NULL,               G_CALLBACK(goto_next_frame_conversation_cb) },
+ 
+ 
+-   { "/Analyze/DisplayFilters",     WIRESHARK_STOCK_DISPLAY_FILTER,     "_Display Filters...",  NULL,                           NULL,               G_CALLBACK(dfilter_dialog_cb) },
++   { "/Analyze/DisplayFilters",     WIRESHARK_STOCK_DISPLAY_FILTER,     "Display Filters...",  NULL,                           NULL,               G_CALLBACK(dfilter_dialog_cb) },
+ 
+    { "/Analyze/DisplayFilterMacros",            NULL,                   "Display Filter _Macros...",    NULL,                   NULL,               G_CALLBACK(macros_dialog_cb) },
+    { "/Analyze/ApplyasColumn",                  NULL,                           "Apply as Column",      NULL,                   NULL,               G_CALLBACK(apply_as_custom_column_cb) },
+ 
+-   { "/Analyze/EnabledProtocols",   WIRESHARK_STOCK_CHECKBOX, "_Enabled Protocols...",  "<shift><control>E", NULL, G_CALLBACK(proto_cb) },
++   { "/Analyze/EnabledProtocols",   WIRESHARK_STOCK_CHECKBOX, "Enabled Protocols...",  NULL, NULL, G_CALLBACK(proto_cb) },
+    { "/Analyze/DecodeAs",   WIRESHARK_STOCK_DECODE_AS, "Decode _As...",         NULL, NULL, G_CALLBACK(decode_as_cb) },
+    { "/Analyze/UserSpecifiedDecodes",   WIRESHARK_STOCK_DECODE_AS, "_User Specified Decodes...",            NULL, NULL, G_CALLBACK(decode_show_cb) },
+ 
+@@ -1384,11 +1384,11 @@
+    { "/Analyze/ConversationFilter",                         NULL,       "Conversation Filter",                  NULL, NULL, NULL },
+ 
+ 
+-   { "/Statistics/ConversationList",                           NULL,       "_Conversation List",                   NULL, NULL, NULL },
++   { "/Statistics/ConversationList",                           NULL,       "Conversation List",                   NULL, NULL, NULL },
+ 
+-   { "/Statistics/EndpointList",                                NULL,               "_Endpoint List",               NULL, NULL, NULL },
++   { "/Statistics/EndpointList",                                NULL,               "Endpoint List",               NULL, NULL, NULL },
+ 
+-   { "/Statistics/ServiceResponseTime",             NULL,           "Service _Response Time",       NULL, NULL, NULL },
++   { "/Statistics/ServiceResponseTime",             NULL,           "Service Response Time",       NULL, NULL, NULL },
+    { "/Statistics/ServiceResponseTime/DCE-RPC",     WIRESHARK_STOCK_TIME,           "DCE-RPC...",                   NULL, NULL, G_CALLBACK(gtk_dcerpcstat_cb) },
+    { "/Statistics/ServiceResponseTime/ONC-RPC",     WIRESHARK_STOCK_TIME,           "ONC-RPC...",                   NULL, NULL, G_CALLBACK(gtk_rpcstat_cb) },
+ 
+@@ -1418,7 +1418,7 @@
+    { "/Statistics/collectd",                        NULL,       "Collectd...",                      NULL, NULL, G_CALLBACK(gtk_stats_tree_cb) },
+    { "/Statistics/compare",                         NULL,       "Compare...",                       NULL, NULL, G_CALLBACK(gtk_comparestat_cb) },
+    { "/Statistics/dns",                             NULL,       "DNS",                              NULL, NULL, G_CALLBACK(gtk_stats_tree_cb) },
+-   { "/Statistics/FlowGraph",       WIRESHARK_STOCK_FLOW_GRAPH, "Flo_w Graph...",                   NULL, NULL, G_CALLBACK(flow_graph_launch) },
++   { "/Statistics/FlowGraph",       WIRESHARK_STOCK_FLOW_GRAPH, "Flow Graph...",                   NULL, NULL, G_CALLBACK(flow_graph_launch) },
+    { "/Statistics/hart_ip",                         NULL,       "HART-IP",                          NULL, NULL, G_CALLBACK(gtk_stats_tree_cb) },
+    { "/Statistics/hpfeeds",                         NULL,       "HPFEEDS",                          NULL, NULL, G_CALLBACK(gtk_stats_tree_cb) },
+    { "/Statistics/HTTP",                            NULL,       "HTTP",                             NULL, NULL, NULL },
+@@ -1438,50 +1438,50 @@
+    { "/Statistics/UDPMulticastStreams",                             NULL, "UDP Multicast Streams",          NULL, NULL, G_CALLBACK(mcaststream_launch) },
+    { "/Statistics/WLANTraffic",                                     NULL, "WLAN Traffic",                   NULL, NULL, G_CALLBACK(wlanstat_launch) },
+ 
+-   { "/Statistics/Summary",                     GTK_STOCK_PROPERTIES,           "_Summary",                     NULL, NULL, G_CALLBACK(summary_open_cb) },
++   { "/Statistics/Summary",                     GTK_STOCK_PROPERTIES,           "Summary",                     NULL, NULL, G_CALLBACK(summary_open_cb) },
+    { "/Statistics/CommentsSummary",             NULL,                           "Comments Summary",             NULL, NULL, G_CALLBACK(show_packet_comment_summary_dlg) },
+    { "/Statistics/ShowAddreRes",                NULL,                           "Show address resolution",      NULL, NULL, G_CALLBACK(addr_resolution_dlg) },
+-   { "/Statistics/ProtocolHierarchy",           NULL,                           "_Protocol Hierarchy",          NULL, NULL, G_CALLBACK(proto_hier_stats_cb) },
++   { "/Statistics/ProtocolHierarchy",           NULL,                           "Protocol Hierarchy",          NULL, NULL, G_CALLBACK(proto_hier_stats_cb) },
+    { "/Statistics/Conversations",   WIRESHARK_STOCK_CONVERSATIONS,  "Conversations",            NULL,                       NULL,               G_CALLBACK(init_conversation_notebook_cb) },
+    { "/Statistics/Endpoints",       WIRESHARK_STOCK_ENDPOINTS,      "Endpoints",                NULL,                       NULL,               G_CALLBACK(init_hostlist_notebook_cb) },
+-   { "/Statistics/IOGraphs",            WIRESHARK_STOCK_GRAPHS,     "_IO Graph",                NULL,                       NULL,               G_CALLBACK(gui_iostat_cb) },
++   { "/Statistics/IOGraphs",            WIRESHARK_STOCK_GRAPHS,     "IO Graph",                NULL,                       NULL,               G_CALLBACK(gui_iostat_cb) },
+    { "/Statistics/plen",                        NULL,               "Packet Lengths...",        NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
+ 
+-   { "/Telephony/ANSI",                 NULL,                       "_ANSI",                    NULL, NULL, NULL },
+-   { "/Telephony/GSM",                  NULL,                       "_GSM",                     NULL, NULL, NULL },
++   { "/Telephony/ANSI",                 NULL,                       "ANSI",                    NULL, NULL, NULL },
++   { "/Telephony/GSM",                  NULL,                       "GSM",                     NULL, NULL, NULL },
+    { "/Telephony/GSM/MAPSummary",       NULL,                       "MAP Summary",              NULL,                       NULL,               G_CALLBACK(gsm_map_stat_gtk_sum_cb) },
+ 
+    { "/Telephony/IAX2",                 NULL,                       "IA_X2",                    NULL, NULL, NULL },
+    { "/Telephony/IAX2/StreamAnalysis",  NULL,                       "Stream Analysis...",       NULL,                       NULL,               G_CALLBACK(iax2_analysis_cb) },
+ 
+-   { "/Telephony/isup_msg",             NULL,                       "_ISUP Messages",           NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
++   { "/Telephony/isup_msg",             NULL,                       "ISUP Messages",           NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
+ 
+-   { "/Telephony/LTE",                  NULL,                       "_LTE",                     NULL, NULL, NULL },
++   { "/Telephony/LTE",                  NULL,                       "LTE",                     NULL, NULL, NULL },
+    { "/Telephony/LTE/RLCGraph",         NULL,                       "RLC _Graph...",            NULL,                       NULL,               G_CALLBACK(rlc_lte_graph_cb) },
+-   { "/Telephony/MTP3",                 NULL,                       "_MTP3",                    NULL, NULL, NULL },
++   { "/Telephony/MTP3",                 NULL,                       "MTP3",                    NULL, NULL, NULL },
+    { "/Telephony/MTP3/MSUSummary",      NULL,                       "MSU Summary",              NULL,                       NULL,               G_CALLBACK(mtp3_sum_gtk_sum_cb) },
+    { "/Telephony/Osmux",                NULL,                       "Osmux",                    NULL, NULL, NULL },
+    { "/Telephony/Osmux/osmux",          NULL,                       "Packet Counter",           NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
+-   { "/Telephony/RTP",                  NULL,                       "_RTP",                     NULL, NULL, NULL },
++   { "/Telephony/RTP",                  NULL,                       "RTP",                     NULL, NULL, NULL },
+    { "/Telephony/RTP/StreamAnalysis",   NULL,                       "Stream Analysis...",       NULL,                       NULL,               G_CALLBACK(rtp_analysis_cb) },
+    { "/Telephony/RTP/ShowAllStreams",   NULL,                       "Show All Streams",         NULL,                       NULL,               G_CALLBACK(rtpstream_launch) },
+    { "/Telephony/RTSP",                 NULL,                       "RTSP",                     NULL, NULL, NULL },
+    { "/Telephony/RTSP/rtsp",            NULL,                       "Packet Counter",           NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
+-   { "/Telephony/SCTP",                 NULL,                       "S_CTP",                        NULL, NULL, NULL },
++   { "/Telephony/SCTP",                 NULL,                       "SCTP",                        NULL, NULL, NULL },
+    { "/Telephony/SCTP/AnalysethisAssociation",  NULL,               "Analyse this Association", NULL,                       NULL,               G_CALLBACK(sctp_analyse_start) },
+    { "/Telephony/SCTP/ShowAllAssociations",     NULL,               "Show All Associations...", NULL,                       NULL,               G_CALLBACK(sctp_stat_start) },
+-   { "/Telephony/smpp_commands",        NULL,                       "SM_PPOperations",          NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
+-   { "/Telephony/ucp_messages",         NULL,                       "_UCP Messages",            NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
+-   { "/Telephony/VoIPCalls",            WIRESHARK_STOCK_TELEPHONE,  "_VoIP Calls",              NULL,                       NULL,               G_CALLBACK(voip_calls_launch) },
++   { "/Telephony/smpp_commands",        NULL,                       "SMPPOperations",          NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
++   { "/Telephony/ucp_messages",         NULL,                       "UCP Messages",            NULL,                       NULL,               G_CALLBACK(gtk_stats_tree_cb) },
++   { "/Telephony/VoIPCalls",            WIRESHARK_STOCK_TELEPHONE,  "VoIP Calls",              NULL,                       NULL,               G_CALLBACK(voip_calls_launch) },
+    { "/Telephony/VoIPFlows",            WIRESHARK_STOCK_TELEPHONE,  "SIP _Flows",               NULL,                       NULL,               G_CALLBACK(voip_flows_launch) },
+ 
+    { "/Tools/FirewallACLRules",     NULL,                           "Firewall ACL Rules",       NULL,                       NULL,               G_CALLBACK(firewall_rule_cb) },
+ 
+-   { "/Internals/Dissectortables",  NULL,                           "_Dissector tables",        NULL,                       NULL,               G_CALLBACK(dissector_tables_dlg_cb) },
+-   { "/Internals/Conversations",    NULL,                           "_Conversation hash tables",NULL,                       NULL,               G_CALLBACK(conversation_hastables_dlg) },
+-   { "/Internals/SupportedProtocols", NULL,                 "_Supported Protocols (slow!)",     NULL,                       NULL,               G_CALLBACK(supported_cb) },
++   { "/Internals/Dissectortables",  NULL,                           "Dissector tables",        NULL,                       NULL,               G_CALLBACK(dissector_tables_dlg_cb) },
++   { "/Internals/Conversations",    NULL,                           "Conversation hash tables",NULL,                       NULL,               G_CALLBACK(conversation_hastables_dlg) },
++   { "/Internals/SupportedProtocols", NULL,                 "Supported Protocols (slow!)",     NULL,                       NULL,               G_CALLBACK(supported_cb) },
+ 
+-   { "/Help/Contents",              GTK_STOCK_HELP,                 "_Contents",            "F1",                           NULL,               G_CALLBACK(help_menu_cont_cb) },
++   { "/Help/Contents",              GTK_STOCK_HELP,                 "Contents",            "F1",                           NULL,               G_CALLBACK(help_menu_cont_cb) },
+    { "/Help/ManualPages",           NULL,                           "ManualPages",          NULL,                           NULL,               NULL },
+    { "/Help/ManualPages/Wireshark", NULL,                           "Wireshark",            NULL,                           NULL,               G_CALLBACK(help_menu_wireshark_cb) },
+    { "/Help/ManualPages/WiresharkFilter", NULL,                     "Wireshark Filter",     NULL,                           NULL,               G_CALLBACK(help_menu_wireshark_flt_cb) },
+@@ -1503,43 +1503,43 @@
+ #ifdef HAVE_SOFTWARE_UPDATE
+    { "/Help/CheckForUpdates",       NULL,                           "Check for Updates...", NULL,                           NULL,               G_CALLBACK(check_for_updates_cb) },
+ #endif /* HAVE_SOFTWARE_UPDATE */
+-   { "/Help/AboutWireshark",        WIRESHARK_STOCK_ABOUT,          "_About Wireshark",     NULL,                           NULL,               G_CALLBACK(about_wireshark_cb) },
++   { "/Help/AboutWireshark",        WIRESHARK_STOCK_ABOUT,          "About Wireshark",     NULL,                           NULL,               G_CALLBACK(about_wireshark_cb) },
+ };
+ 
+ static const GtkToggleActionEntry main_menu_bar_toggle_action_entries[] =
+ {
+     /* name, stock id, label, accel, tooltip, callback, is_active */
+-    {"/View/MainToolbar",                                           NULL, "_Main Toolbar",                          NULL, NULL, G_CALLBACK(main_toolbar_show_hide_cb), TRUE},
+-    {"/View/FilterToolbar",                                         NULL, "_Filter Toolbar",                         NULL, NULL, G_CALLBACK(filter_toolbar_show_hide_cb), TRUE},
++    {"/View/MainToolbar",                                           NULL, "Main Toolbar",                          NULL, NULL, G_CALLBACK(main_toolbar_show_hide_cb), TRUE},
++    {"/View/FilterToolbar",                                         NULL, "Filter Toolbar",                         NULL, NULL, G_CALLBACK(filter_toolbar_show_hide_cb), TRUE},
+     {"/View/WirelessToolbar",                                       NULL, "Wire_less Toolbar",                       NULL, NULL, G_CALLBACK(wireless_toolbar_show_hide_cb), FALSE},
+-    {"/View/StatusBar",                                             NULL, "_Status Bar",                             NULL, NULL, G_CALLBACK(status_bar_show_hide_cb), TRUE},
++    {"/View/StatusBar",                                             NULL, "Status Bar",                             NULL, NULL, G_CALLBACK(status_bar_show_hide_cb), TRUE},
+     {"/View/PacketList",                                            NULL, "Packet _List",                           NULL, NULL, G_CALLBACK(packet_list_show_hide_cb), TRUE},
+     {"/View/PacketDetails",                                         NULL, "Packet _Details",                        NULL, NULL, G_CALLBACK(packet_details_show_hide_cb), TRUE},
+     {"/View/PacketBytes",                                           NULL, "Packet _Bytes",                          NULL, NULL, G_CALLBACK(packet_bytes_show_hide_cb), TRUE},
+     {"/View/TimeDisplayFormat/DisplaySecondsWithHoursAndMinutes",   NULL, "Display Seconds with hours and minutes", NULL, NULL, G_CALLBACK(timestamp_seconds_time_cb), FALSE},
+-    {"/View/NameResolution/EnableforMACLayer",                      NULL, "Enable for _MAC Layer",                  NULL, NULL, G_CALLBACK(view_menu_en_for_MAC_cb), TRUE},
+-    {"/View/NameResolution/EnableforTransportLayer",                NULL, "Enable for _Transport Layer",            NULL, NULL, G_CALLBACK(view_menu_en_for_transport_cb), TRUE },
+-    {"/View/NameResolution/EnableforNetworkLayer",                  NULL, "Enable for _Network Layer",              NULL, NULL, G_CALLBACK(view_menu_en_for_network_cb), TRUE },
+-    {"/View/NameResolution/UseExternalNetworkNameResolver",         NULL, "Use _External Network Name Resolver",    NULL, NULL, G_CALLBACK(view_menu_en_use_external_resolver_cb), TRUE },
++    {"/View/NameResolution/EnableforMACLayer",                      NULL, "Enable for MAC Layer",                  NULL, NULL, G_CALLBACK(view_menu_en_for_MAC_cb), TRUE},
++    {"/View/NameResolution/EnableforTransportLayer",                NULL, "Enable for Transport Layer",            NULL, NULL, G_CALLBACK(view_menu_en_for_transport_cb), TRUE },
++    {"/View/NameResolution/EnableforNetworkLayer",                  NULL, "Enable for Network Layer",              NULL, NULL, G_CALLBACK(view_menu_en_for_network_cb), TRUE },
++    {"/View/NameResolution/UseExternalNetworkNameResolver",         NULL, "Use External Network Name Resolver",    NULL, NULL, G_CALLBACK(view_menu_en_use_external_resolver_cb), TRUE },
+     {"/View/ColorizePacketList",                                    NULL, "Colorize Packet List",                   NULL, NULL, G_CALLBACK(view_menu_colorize_pkt_lst_cb), TRUE },
+ #ifdef HAVE_LIBPCAP
+-    {"/View/AutoScrollinLiveCapture",                               NULL, "Auto Scroll in Li_ve Capture",           NULL, NULL, G_CALLBACK(view_menu_auto_scroll_live_cb), TRUE },
++    {"/View/AutoScrollinLiveCapture",                               NULL, "Auto Scroll in Live Capture",           NULL, NULL, G_CALLBACK(view_menu_auto_scroll_live_cb), TRUE },
+ #endif
+ };
+ 
+ static const GtkRadioActionEntry main_menu_bar_radio_view_time_entries [] =
+ {
+     /* name, stock id, label, accel, tooltip,  value */
+-    { "/View/TimeDisplayFormat/DateYMDandTimeofDay",                NULL, "Date and Time of Day:   1970-01-01 01:02:03.123456", "<alt><control>1", NULL, TS_ABSOLUTE_WITH_YMD },
++    { "/View/TimeDisplayFormat/DateYMDandTimeofDay",                NULL, "Date and Time of Day:   1970-01-01 01:02:03.123456", NULL, NULL, TS_ABSOLUTE_WITH_YMD },
+     { "/View/TimeDisplayFormat/DateYDOYandTimeofDay",               NULL, "Date (with day of year) and Time of Day:   1970/001 01:02:03.123456", NULL, NULL, TS_ABSOLUTE_WITH_YDOY },
+-    { "/View/TimeDisplayFormat/TimeofDay",                          NULL, "Time of Day:   01:02:03.123456", "<alt><control>2", NULL, TS_ABSOLUTE },
+-    { "/View/TimeDisplayFormat/SecondsSinceEpoch",                  NULL, "Seconds Since Epoch (1970-01-01):   1234567890.123456", "<alt><control>3", NULL, TS_EPOCH },
+-    { "/View/TimeDisplayFormat/SecondsSinceBeginningofCapture",     NULL, "Seconds Since Beginning of Capture:   123.123456", "<alt><control>4", NULL, TS_RELATIVE },
+-    { "/View/TimeDisplayFormat/SecondsSincePreviousCapturedPacket", NULL, "Seconds Since Previous Captured Packet:   1.123456", "<alt><control>5", NULL, TS_DELTA },
+-    { "/View/TimeDisplayFormat/SecondsSincePreviousDisplayedPacket",NULL, "Seconds Since Previous Displayed Packet:   1.123456", "<alt><control>6", NULL, TS_DELTA_DIS },
+-    { "/View/TimeDisplayFormat/UTCDateYMDandTimeofDay",             NULL, "UTC Date and Time of Day:   1970-01-01 01:02:03.123456", "<alt><control>7", NULL, TS_UTC_WITH_YMD },
++    { "/View/TimeDisplayFormat/TimeofDay",                          NULL, "Time of Day:   01:02:03.123456", NULL, NULL, TS_ABSOLUTE },
++    { "/View/TimeDisplayFormat/SecondsSinceEpoch",                  NULL, "Seconds Since Epoch (1970-01-01):   1234567890.123456", NULL, NULL, TS_EPOCH },
++    { "/View/TimeDisplayFormat/SecondsSinceBeginningofCapture",     NULL, "Seconds Since Beginning of Capture:   123.123456", NULL, NULL, TS_RELATIVE },
++    { "/View/TimeDisplayFormat/SecondsSincePreviousCapturedPacket", NULL, "Seconds Since Previous Captured Packet:   1.123456", NULL, NULL, TS_DELTA },
++    { "/View/TimeDisplayFormat/SecondsSincePreviousDisplayedPacket",NULL, "Seconds Since Previous Displayed Packet:   1.123456", NULL, NULL, TS_DELTA_DIS },
++    { "/View/TimeDisplayFormat/UTCDateYMDandTimeofDay",             NULL, "UTC Date and Time of Day:   1970-01-01 01:02:03.123456", NULL, NULL, TS_UTC_WITH_YMD },
+     { "/View/TimeDisplayFormat/UTCDateYDOYandTimeofDay",            NULL, "UTC Date (with day of year) and Time of Day:   1970/001 01:02:03.123456", NULL, NULL, TS_UTC_WITH_YDOY },
+-    { "/View/TimeDisplayFormat/UTCTimeofDay",                       NULL, "UTC Time of Day:   01:02:03.123456", "<alt><control>8", NULL, TS_UTC },
++    { "/View/TimeDisplayFormat/UTCTimeofDay",                       NULL, "UTC Time of Day:   01:02:03.123456", NULL, NULL, TS_UTC },
+ };
+ 
+ static const GtkRadioActionEntry main_menu_bar_radio_view_time_fileformat_prec_entries [] =
+diff -Naur wireshark-2.6.8-orig/ui/gtk/print_dlg.c wireshark-2.6.8-new/ui/gtk/print_dlg.c
+--- wireshark-2.6.8-orig/ui/gtk/print_dlg.c	2019-12-08 17:20:59.348321143 +0000
++++ wireshark-2.6.8-new/ui/gtk/print_dlg.c	2019-12-08 17:18:50.740298551 +0000
+@@ -612,7 +612,7 @@
+   gtk_widget_show(printer_vb);
+ 
+   /* "Plain text" / "Postscript" / "PDML", ... radio buttons */
+-  text_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "Plain _text");
++  text_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "Plain text");
+   if (args->format == PR_FMT_TEXT)
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(text_rb), TRUE);
+   gtk_widget_set_tooltip_text(text_rb, "Print output in ascii \"plain text\" format. If you're unsure, use this format.");
+@@ -620,7 +620,7 @@
+   if(action == output_action_print)
+     gtk_widget_show(text_rb);
+ 
+-  ps_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(text_rb), "_PostScript");
++  ps_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(text_rb), "PostScript");
+   if (args->format == PR_FMT_PS)
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ps_rb), TRUE);
+   gtk_widget_set_tooltip_text(ps_rb, "Print output in \"postscript\" format, for postscript capable printers or print servers.");
+@@ -628,7 +628,7 @@
+   if(action == output_action_print)
+     gtk_widget_show(ps_rb);
+ 
+-  pdml_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(text_rb), "PDM_L (XML: Packet Details Markup Language)");
++  pdml_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(text_rb), "PDML (XML: Packet Details Markup Language)");
+   if (action == output_action_export_pdml)
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pdml_rb), TRUE);
+   gtk_widget_set_tooltip_text(pdml_rb,
+@@ -648,7 +648,7 @@
+   gtk_box_pack_start(GTK_BOX(printer_vb), psml_rb, FALSE, FALSE, 0);
+   /* gtk_widget_show(psml_rb); */
+ 
+-  csv_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(text_rb), "_CSV");
++  csv_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(text_rb), "CSV");
+   if (action == output_action_export_csv)
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(csv_rb), TRUE);
+   gtk_widget_set_tooltip_text(csv_rb,
+@@ -686,7 +686,7 @@
+ 
+ 
+   /* Output to file button */
+-  dest_cb = gtk_check_button_new_with_mnemonic("Output to _file:");
++  dest_cb = gtk_check_button_new_with_mnemonic("Output to file:");
+   if (args->to_file)
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dest_cb), TRUE);
+   gtk_widget_set_tooltip_text(dest_cb, "Output to file instead of printer");
+@@ -815,21 +815,21 @@
+   gtk_widget_show(details_vb);
+ 
+   /* "All collapsed"/"As displayed"/"All Expanded" radio buttons */
+-  collapse_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "All co_llapsed");
++  collapse_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "All collapsed");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(collapse_all_rb), args->print_dissections == print_dissections_collapsed);
+   gtk_widget_set_sensitive(collapse_all_rb, args->print_dissections != print_dissections_none);
+   gtk_widget_set_tooltip_text(collapse_all_rb, "Output of the packet details tree \"collapsed\"");
+   gtk_box_pack_start(GTK_BOX(details_vb), collapse_all_rb, TRUE, TRUE, 0);
+   gtk_widget_show(collapse_all_rb);
+ 
+-  as_displayed_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(collapse_all_rb), "As displa_yed");
++  as_displayed_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(collapse_all_rb), "As displayed");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(as_displayed_rb), args->print_dissections == print_dissections_as_displayed);
+   gtk_widget_set_sensitive(as_displayed_rb, args->print_dissections != print_dissections_none);
+   gtk_widget_set_tooltip_text(as_displayed_rb, "Output of the packet details tree \"as displayed\"");
+   gtk_box_pack_start(GTK_BOX(details_vb), as_displayed_rb, TRUE, TRUE, 0);
+   gtk_widget_show(as_displayed_rb);
+ 
+-  expand_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(collapse_all_rb), "All e_xpanded");
++  expand_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(collapse_all_rb), "All expanded");
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(expand_all_rb), args->print_dissections == print_dissections_expanded);
+   gtk_widget_set_sensitive(expand_all_rb, args->print_dissections != print_dissections_none);
+   gtk_widget_set_tooltip_text(expand_all_rb, "Output of the packet details tree \"expanded\"");
+diff -Naur wireshark-2.6.8-orig/ui/gtk/range_utils.c wireshark-2.6.8-new/ui/gtk/range_utils.c
+--- wireshark-2.6.8-orig/ui/gtk/range_utils.c	2019-12-08 17:20:59.348321143 +0000
++++ wireshark-2.6.8-new/ui/gtk/range_utils.c	2019-12-08 17:18:50.740298551 +0000
+@@ -560,13 +560,13 @@
+   gtk_container_set_border_width(GTK_CONTAINER(range_grid), 5);
+ 
+   /* captured button */
+-  captured_bt = gtk_toggle_button_new_with_mnemonic("_Captured");
++  captured_bt = gtk_toggle_button_new_with_mnemonic("Captured");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), captured_bt, 1, 0, 1, 1);
+   g_signal_connect(captured_bt, "toggled", G_CALLBACK(toggle_captured_cb), range_grid);
+   gtk_widget_set_tooltip_text (captured_bt,("Process all the below chosen packets"));
+ 
+   /* displayed button */
+-  displayed_bt = gtk_toggle_button_new_with_mnemonic("_Displayed");
++  displayed_bt = gtk_toggle_button_new_with_mnemonic("Displayed");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), displayed_bt, 2, 0, 1, 1);
+   g_signal_connect(displayed_bt, "toggled", G_CALLBACK(toggle_filtered_cb), range_grid);
+   if (saving)
+@@ -581,7 +581,7 @@
+ 
+ 
+   /* Process all packets */
+-  select_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "_All packets");
++  select_all_rb = gtk_radio_button_new_with_mnemonic_from_widget(NULL, "All packets");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), select_all_rb, 0, 1, 1, 1);
+   gtk_widget_set_tooltip_text (select_all_rb, ("Process all packets"));
+   g_signal_connect(select_all_rb, "toggled", G_CALLBACK(toggle_select_all), range_grid);
+@@ -594,7 +594,7 @@
+ 
+   /* Process currently selected */
+   select_curr_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(select_all_rb),
+-                                                                  "_Selected packet only");
++                                                                  "Selected packet only");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), select_curr_rb, 0, 2, 1, 1);
+   gtk_widget_set_tooltip_text (select_curr_rb, ("Process the currently selected packet only"));
+   g_signal_connect(select_curr_rb, "toggled", G_CALLBACK(toggle_select_selected), range_grid);
+@@ -607,7 +607,7 @@
+ 
+   /* Process marked packets */
+   select_marked_only_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(select_all_rb),
+-                                                                         "_Marked packets only");
++                                                                         "Marked packets only");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), select_marked_only_rb, 0, 3, 1, 1);
+   gtk_widget_set_tooltip_text (select_marked_only_rb, ("Process marked packets only"));
+   g_signal_connect(select_marked_only_rb, "toggled", G_CALLBACK(toggle_select_marked_only), range_grid);
+@@ -620,7 +620,7 @@
+ 
+   /* Process packet range between first and last packet */
+   select_marked_range_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(select_all_rb),
+-                                                                          "From first _to last marked packet");
++                                                                          "From first to last marked packet");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), select_marked_range_rb, 0, 4, 1, 1);
+   gtk_widget_set_tooltip_text (select_marked_range_rb,("Process all packets between the first and last marker"));
+   g_signal_connect(select_marked_range_rb, "toggled", G_CALLBACK(toggle_select_marked_range), range_grid);
+@@ -633,7 +633,7 @@
+ 
+   /* Process a user specified provided packet range : -10,30,40-70,80- */
+   select_user_range_rb = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(select_all_rb),
+-                                                                        "Specify a packet _range:");
++                                                                        "Specify a packet range:");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), select_user_range_rb, 0, 5, 1, 1);
+   gtk_widget_set_tooltip_text (select_user_range_rb,("Process a specified packet range"));
+   g_signal_connect(select_user_range_rb, "toggled", G_CALLBACK(toggle_select_user_range), range_grid);
+@@ -654,7 +654,7 @@
+   g_signal_connect(select_user_range_entry,"activate", G_CALLBACK(range_entry_in_event), range_grid);
+ 
+   /* Remove ignored packets */
+-  remove_ignored_cb = gtk_check_button_new_with_mnemonic("Remove _Ignored packets");
++  remove_ignored_cb = gtk_check_button_new_with_mnemonic("Remove Ignored packets");
+   ws_gtk_grid_attach_defaults(GTK_GRID(range_grid), remove_ignored_cb, 0, 7, 1, 1);
+   gtk_widget_set_tooltip_text (remove_ignored_cb,("Remove all packets marked as Ignored"));
+   g_signal_connect(remove_ignored_cb, "toggled", G_CALLBACK(toggle_remove_ignored), range_grid);
+diff -Naur wireshark-2.6.8-orig/ui/gtk/stock_icons.c wireshark-2.6.8-new/ui/gtk/stock_icons.c
+--- wireshark-2.6.8-orig/ui/gtk/stock_icons.c	2019-12-08 17:20:59.358320989 +0000
++++ wireshark-2.6.8-new/ui/gtk/stock_icons.c	2019-12-08 17:18:50.740298551 +0000
+@@ -110,14 +110,14 @@
+  * PLEASE DON'T REUSE STOCK ICONS IF THEY ARE USUALLY USED FOR SOME DIFFERENT MEANING!!!)
+  */
+ static stock_item_t ws_stock_items[] = {
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_INTERFACES,    (char *)WIRESHARK_STOCK_CAPTURE_INTERFACES,     (const char *)"_Interfaces"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_OPTIONS,       (const char *)WIRESHARK_STOCK_CAPTURE_OPTIONS,        (const char *)"_Options"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_START,         (const char *)WIRESHARK_STOCK_CAPTURE_START,          (const char *)"_Start"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_STOP,          (const char *)WIRESHARK_STOCK_CAPTURE_STOP,           (const char *)"S_top"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_RESTART,       (const char *)WIRESHARK_STOCK_CAPTURE_RESTART,        (const char *)"_Restart"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_FILTER,        (const char *)WIRESHARK_STOCK_CAPTURE_FILTER,         (const char *)"_Capture Filter"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_FILTER_ENTRY,  (const char *)WIRESHARK_STOCK_CAPTURE_FILTER_ENTRY,   (const char *)"_Capture Filter:"},
+-    {(const char *)WIRESHARK_STOCK_CAPTURE_DETAILS,       (const char *)WIRESHARK_STOCK_CAPTURE_DETAILS,        (const char *)"_Details"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_INTERFACES,    (char *)WIRESHARK_STOCK_CAPTURE_INTERFACES,     (const char *)"Interfaces"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_OPTIONS,       (const char *)WIRESHARK_STOCK_CAPTURE_OPTIONS,        (const char *)"Options"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_START,         (const char *)WIRESHARK_STOCK_CAPTURE_START,          (const char *)"Start"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_STOP,          (const char *)WIRESHARK_STOCK_CAPTURE_STOP,           (const char *)"Stop"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_RESTART,       (const char *)WIRESHARK_STOCK_CAPTURE_RESTART,        (const char *)"Restart"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_FILTER,        (const char *)WIRESHARK_STOCK_CAPTURE_FILTER,         (const char *)"Capture Filter"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_FILTER_ENTRY,  (const char *)WIRESHARK_STOCK_CAPTURE_FILTER_ENTRY,   (const char *)"Capture Filter:"},
++    {(const char *)WIRESHARK_STOCK_CAPTURE_DETAILS,       (const char *)WIRESHARK_STOCK_CAPTURE_DETAILS,        (const char *)"Details"},
+     #ifdef HAVE_GEOIP
+     {(const char *)WIRESHARK_STOCK_MAP,                   (const char *)WIRESHARK_STOCK_MAP,                    (const char *)"Map"},
+     #endif
+@@ -125,24 +125,24 @@
+     {(const char *)WIRESHARK_STOCK_GRAPH_B_A,             (const char *)WIRESHARK_STOCK_GRAPH_B_A,              (const char *)"Graph A" UTF8_LEFTWARDS_ARROW  "B"},
+     {(const char *)WIRESHARK_STOCK_FOLLOW_STREAM,         (const char *)WIRESHARK_STOCK_FOLLOW_STREAM,          (const char *)"Follow Stream"},
+     {(const char *)WIRESHARK_STOCK_DISPLAY_FILTER,        (const char *)WIRESHARK_STOCK_DISPLAY_FILTER,         (const char *)"Display _Filter"},
+-    {(const char *)WIRESHARK_STOCK_DISPLAY_FILTER_ENTRY,  (const char *)WIRESHARK_STOCK_DISPLAY_FILTER_ENTRY,   (const char *)"F_ilter:"},
+-    {(const char *)WIRESHARK_STOCK_BROWSE,                (const char *)GTK_STOCK_OPEN,                         (const char *)"_Browse..."},
++    {(const char *)WIRESHARK_STOCK_DISPLAY_FILTER_ENTRY,  (const char *)WIRESHARK_STOCK_DISPLAY_FILTER_ENTRY,   (const char *)"Filter:"},
++    {(const char *)WIRESHARK_STOCK_BROWSE,                (const char *)GTK_STOCK_OPEN,                         (const char *)"Browse..."},
+     {(const char *)WIRESHARK_STOCK_CREATE_STAT,           (const char *)GTK_STOCK_OK,                           (const char *)"Create _Stat"},
+-    {(const char *)WIRESHARK_STOCK_EXPORT,                (const char *)GTK_STOCK_SAVE,                         (const char *)"_Export..."}, /* XXX: needs a better icon */
+-    {(const char *)WIRESHARK_STOCK_IMPORT,                (const char *)GTK_STOCK_OPEN,                         (const char *)"_Import..."}, /* XXX: needs a better icon */
+-    {(const char *)WIRESHARK_STOCK_EDIT,                  (const char *)GTK_STOCK_PROPERTIES,                   (const char *)"_Edit..."},
+-    {(const char *)WIRESHARK_STOCK_ADD_EXPRESSION,        (const char *)GTK_STOCK_ADD,                          (const char *)"E_xpression..." }, /* plus sign coming from icon */
+-    {(const char *)WIRESHARK_STOCK_CLEAR_EXPRESSION,      (const char *)GTK_STOCK_CLEAR,                        (const char *)"Clea_r" },
+-    {(const char *)WIRESHARK_STOCK_APPLY_EXPRESSION,      (const char *)GTK_STOCK_APPLY,                        (const char *)"App_ly" },
+-    {(const char *)WIRESHARK_STOCK_SAVE_ALL,              (const char *)GTK_STOCK_SAVE,                        (const char *)"Save A_ll"}, /* XXX: needs a better icon */
+-    {(const char *)WIRESHARK_STOCK_DONT_SAVE,             (const char *)GTK_STOCK_CLEAR,                        (const char *)"Continue _without Saving"},
+-    {(const char *)WIRESHARK_STOCK_QUIT_DONT_SAVE,        (const char *)GTK_STOCK_CLEAR,                        (const char *)"Quit _without Saving"},
+-    {(const char *)WIRESHARK_STOCK_STOP_DONT_SAVE,        (const char *)GTK_STOCK_CLEAR,                        (const char *)"Stop and Continue _without Saving"},
+-    {(const char *)WIRESHARK_STOCK_STOP_QUIT_DONT_SAVE,   (const char *)GTK_STOCK_CLEAR,                        (const char *)"Stop and Quit _without Saving"},
++    {(const char *)WIRESHARK_STOCK_EXPORT,                (const char *)GTK_STOCK_SAVE,                         (const char *)"Export..."}, /* XXX: needs a better icon */
++    {(const char *)WIRESHARK_STOCK_IMPORT,                (const char *)GTK_STOCK_OPEN,                         (const char *)"Import..."}, /* XXX: needs a better icon */
++    {(const char *)WIRESHARK_STOCK_EDIT,                  (const char *)GTK_STOCK_PROPERTIES,                   (const char *)"Edit..."},
++    {(const char *)WIRESHARK_STOCK_ADD_EXPRESSION,        (const char *)GTK_STOCK_ADD,                          (const char *)"Expression..." }, /* plus sign coming from icon */
++    {(const char *)WIRESHARK_STOCK_CLEAR_EXPRESSION,      (const char *)GTK_STOCK_CLEAR,                        (const char *)"Clear" },
++    {(const char *)WIRESHARK_STOCK_APPLY_EXPRESSION,      (const char *)GTK_STOCK_APPLY,                        (const char *)"Apply" },
++    {(const char *)WIRESHARK_STOCK_SAVE_ALL,              (const char *)GTK_STOCK_SAVE,                        (const char *)"Save All"}, /* XXX: needs a better icon */
++    {(const char *)WIRESHARK_STOCK_DONT_SAVE,             (const char *)GTK_STOCK_CLEAR,                        (const char *)"Continue without Saving"},
++    {(const char *)WIRESHARK_STOCK_QUIT_DONT_SAVE,        (const char *)GTK_STOCK_CLEAR,                        (const char *)"Quit without Saving"},
++    {(const char *)WIRESHARK_STOCK_STOP_DONT_SAVE,        (const char *)GTK_STOCK_CLEAR,                        (const char *)"Stop and Continue without Saving"},
++    {(const char *)WIRESHARK_STOCK_STOP_QUIT_DONT_SAVE,   (const char *)GTK_STOCK_CLEAR,                        (const char *)"Stop and Quit without Saving"},
+     {(const char *)WIRESHARK_STOCK_STOP_SAVE,             (const char *)GTK_STOCK_SAVE,                         (const char *)"Stop and Save"},
+-    {(const char *)WIRESHARK_STOCK_ABOUT,                 (const char *)WIRESHARK_STOCK_ABOUT,                  (const char *)"_About"},
+-    {(const char *)WIRESHARK_STOCK_COLORIZE,              (const char *)WIRESHARK_STOCK_COLORIZE,               (const char *)"_Colorize"},
+-    {(const char *)WIRESHARK_STOCK_AUTOSCROLL,            (const char *)WIRESHARK_STOCK_AUTOSCROLL,             (const char *)"_Auto Scroll"},
++    {(const char *)WIRESHARK_STOCK_ABOUT,                 (const char *)WIRESHARK_STOCK_ABOUT,                  (const char *)"About"},
++    {(const char *)WIRESHARK_STOCK_COLORIZE,              (const char *)WIRESHARK_STOCK_COLORIZE,               (const char *)"Colorize"},
++    {(const char *)WIRESHARK_STOCK_AUTOSCROLL,            (const char *)WIRESHARK_STOCK_AUTOSCROLL,             (const char *)"Auto Scroll"},
+     {(const char *)WIRESHARK_STOCK_RESIZE_COLUMNS,        (const char *)WIRESHARK_STOCK_RESIZE_COLUMNS,         (const char *)"Resize Columns"},
+     {(const char *)WIRESHARK_STOCK_TIME,                  (const char *)WIRESHARK_STOCK_TIME,                   (const char *)"Time"},
+     {(const char *)WIRESHARK_STOCK_INTERNET,              (const char *)WIRESHARK_STOCK_INTERNET,               (const char *)"Internet"},
+@@ -182,123 +182,123 @@
+ };
+ 
+ static stock_item_t gtk_stock_items[] = {
+-    {(const char *)GTK_STOCK_ABOUT,                         (const char *)"help-about",                (const char *)"_About"},
+-    {(const char *)GTK_STOCK_ADD,                           (const char *)"list-add",                  (const char *)"_Add"},
+-    {(const char *)GTK_STOCK_APPLY,                         NULL,                                (const char *)"_Apply"},
+-    {(const char *)GTK_STOCK_BOLD,                          (const char *)"format-text-bold",          (const char *)"_Bold"},
+-    {(const char *)GTK_STOCK_CANCEL,                        NULL,                                (const char *)"_Cancel"},
++    {(const char *)GTK_STOCK_ABOUT,                         (const char *)"help-about",                (const char *)"About"},
++    {(const char *)GTK_STOCK_ADD,                           (const char *)"list-add",                  (const char *)"Add"},
++    {(const char *)GTK_STOCK_APPLY,                         NULL,                                (const char *)"Apply"},
++    {(const char *)GTK_STOCK_BOLD,                          (const char *)"format-text-bold",          (const char *)"Bold"},
++    {(const char *)GTK_STOCK_CANCEL,                        NULL,                                (const char *)"Cancel"},
+ #ifdef GTK_STOCK_CAPS_LOCK_WARNING
+     {(const char *)GTK_STOCK_CAPS_LOCK_WARNING,             NULL,                                NULL},
+ #endif
+-    {(const char *)GTK_STOCK_CDROM,                         (const char *)"media-optical",             (const char *)"_CD-ROM"},
+-    {(const char *)GTK_STOCK_CLEAR,                         (const char *)"edit-clear",                (const char *)"_Clear"},
+-    {(const char *)GTK_STOCK_CLOSE,                         (const char *)"window-close",              (const char *)"_Close"},
++    {(const char *)GTK_STOCK_CDROM,                         (const char *)"media-optical",             (const char *)"CD-ROM"},
++    {(const char *)GTK_STOCK_CLEAR,                         (const char *)"edit-clear",                (const char *)"Clear"},
++    {(const char *)GTK_STOCK_CLOSE,                         (const char *)"window-close",              (const char *)"Close"},
+     {(const char *)GTK_STOCK_COLOR_PICKER,                  NULL,                                NULL},
+-    {(const char *)GTK_STOCK_CONNECT,                       NULL,                                (const char *)"C_onnect"},
+-    {(const char *)GTK_STOCK_CONVERT,                       NULL,                                (const char *)"_Convert"},
+-    {(const char *)GTK_STOCK_COPY,                          (const char *)"edit-copy",                 (const char *)"_Copy"},
+-    {(const char *)GTK_STOCK_CUT,                           (const char *)"edit-cut",                  (const char *)"Cu_t"},
+-    {(const char *)GTK_STOCK_DELETE,                        (const char *)"edit-delete",               (const char *)"_Delete"},
++    {(const char *)GTK_STOCK_CONNECT,                       NULL,                                (const char *)"Connect"},
++    {(const char *)GTK_STOCK_CONVERT,                       NULL,                                (const char *)"Convert"},
++    {(const char *)GTK_STOCK_COPY,                          (const char *)"edit-copy",                 (const char *)"Copy"},
++    {(const char *)GTK_STOCK_CUT,                           (const char *)"edit-cut",                  (const char *)"Cut"},
++    {(const char *)GTK_STOCK_DELETE,                        (const char *)"edit-delete",               (const char *)"Delete"},
+     {(const char *)GTK_STOCK_DIALOG_AUTHENTICATION,         (const char *)"dialog-password",           NULL},
+     {(const char *)GTK_STOCK_DIALOG_INFO,                   (const char *)"dialog-information",        (const char *)"Information"},
+     {(const char *)GTK_STOCK_DIALOG_WARNING,                (const char *)"dialog-warning",            (const char *)"Warning"},
+     {(const char *)GTK_STOCK_DIALOG_ERROR,                  (const char *)"dialog-error",              (const char *)"Error"},
+     {(const char *)GTK_STOCK_DIALOG_QUESTION,               (const char *)"dialog-question",           (const char *)"Question"},
+     {(const char *)GTK_STOCK_DIRECTORY,                     (const char *)"folder",                    NULL},
+-    {(const char *)GTK_STOCK_DISCARD,                       NULL,                                (const char *)"_Discard"},
+-    {(const char *)GTK_STOCK_DISCONNECT,                    NULL,                                (const char *)"_Disconnect"},
++    {(const char *)GTK_STOCK_DISCARD,                       NULL,                                (const char *)"Discard"},
++    {(const char *)GTK_STOCK_DISCONNECT,                    NULL,                                (const char *)"Disconnect"},
+     {(const char *)GTK_STOCK_DND,                           NULL,                                NULL},
+     {(const char *)GTK_STOCK_DND_MULTIPLE,                  NULL,                                NULL},
+-    {(const char *)GTK_STOCK_EDIT,                          NULL,                                (const char *)"_Edit"},
+-    {(const char *)GTK_STOCK_EXECUTE,                       (const char *)"system-run",                (const char *)"_Execute"},
+-    {(const char *)GTK_STOCK_FILE,                          (const char *)"text-x-generic",            (const char *)"_File"},
+-    {(const char *)GTK_STOCK_FIND,                          (const char *)"edit-find",                 (const char *)"_Find"},
+-    {(const char *)GTK_STOCK_FIND_AND_REPLACE,              (const char *)"edit-find-replace",         (const char *)"Find     and _Replace"},
+-    {(const char *)GTK_STOCK_FLOPPY,                        (const char *)"media-floppy",              (const char *)"_Floppy"},
+-    {(const char *)GTK_STOCK_FULLSCREEN,                    (const char *)"view-fullscreen",           (const char *)"_Fullscreen"},
+-    {(const char *)GTK_STOCK_GOTO_BOTTOM,                   (const char *)"go-bottom",                 (const char *)"_Bottom"},
+-    {(const char *)GTK_STOCK_GOTO_FIRST,                    (const char *)"go-first",                  (const char *)"_First"},
+-    {(const char *)GTK_STOCK_GOTO_LAST,                     (const char *)"go-last",                   (const char *)"_Last"},
+-    {(const char *)GTK_STOCK_GOTO_TOP,                      (const char *)"go-top",                    (const char *)"_Top"},
+-    {(const char *)GTK_STOCK_GO_BACK,                       (const char *)"go-previous",               (const char *)"_Back"},
+-    {(const char *)GTK_STOCK_GO_DOWN,                       (const char *)"go-down",                   (const char *)"_Down"},
+-    {(const char *)GTK_STOCK_GO_FORWARD,                    (const char *)"go-next",                   (const char *)"_Forward"},
+-    {(const char *)GTK_STOCK_GO_UP,                         (const char *)"go-up",                     (const char *)"_Up"},
+-    {(const char *)GTK_STOCK_HARDDISK,                      (const char *)"drive-harddisk",            (const char *)"_Hard    Disk"},
+-    {(const char *)GTK_STOCK_HELP,                          (const char *)"help-browser",              (const char *)"_Help"},
+-    {(const char *)GTK_STOCK_HOME,                          (const char *)"go-home",                   (const char *)"_Home"},
+-    {(const char *)GTK_STOCK_INDEX,                         NULL,                                (const char *)"_Index"},
++    {(const char *)GTK_STOCK_EDIT,                          NULL,                                (const char *)"Edit"},
++    {(const char *)GTK_STOCK_EXECUTE,                       (const char *)"system-run",                (const char *)"Execute"},
++    {(const char *)GTK_STOCK_FILE,                          (const char *)"text-x-generic",            (const char *)"File"},
++    {(const char *)GTK_STOCK_FIND,                          (const char *)"edit-find",                 (const char *)"Find"},
++    {(const char *)GTK_STOCK_FIND_AND_REPLACE,              (const char *)"edit-find-replace",         (const char *)"Find     and Replace"},
++    {(const char *)GTK_STOCK_FLOPPY,                        (const char *)"media-floppy",              (const char *)"Floppy"},
++    {(const char *)GTK_STOCK_FULLSCREEN,                    (const char *)"view-fullscreen",           (const char *)"Fullscreen"},
++    {(const char *)GTK_STOCK_GOTO_BOTTOM,                   (const char *)"go-bottom",                 (const char *)"Bottom"},
++    {(const char *)GTK_STOCK_GOTO_FIRST,                    (const char *)"go-first",                  (const char *)"First"},
++    {(const char *)GTK_STOCK_GOTO_LAST,                     (const char *)"go-last",                   (const char *)"Last"},
++    {(const char *)GTK_STOCK_GOTO_TOP,                      (const char *)"go-top",                    (const char *)"Top"},
++    {(const char *)GTK_STOCK_GO_BACK,                       (const char *)"go-previous",               (const char *)"Back"},
++    {(const char *)GTK_STOCK_GO_DOWN,                       (const char *)"go-down",                   (const char *)"Down"},
++    {(const char *)GTK_STOCK_GO_FORWARD,                    (const char *)"go-next",                   (const char *)"Forward"},
++    {(const char *)GTK_STOCK_GO_UP,                         (const char *)"go-up",                     (const char *)"Up"},
++    {(const char *)GTK_STOCK_HARDDISK,                      (const char *)"drive-harddisk",            (const char *)"Hard    Disk"},
++    {(const char *)GTK_STOCK_HELP,                          (const char *)"help-browser",              (const char *)"Help"},
++    {(const char *)GTK_STOCK_HOME,                          (const char *)"go-home",                   (const char *)"Home"},
++    {(const char *)GTK_STOCK_INDEX,                         NULL,                                (const char *)"Index"},
+     {(const char *)GTK_STOCK_INDENT,                        (const char *)"format-indent-more",        (const char *)"Increase Indent"},
+-    {(const char *)GTK_STOCK_INFO,                          (const char *)"dialog-information",        (const char *)"_Information"},
+-    {(const char *)GTK_STOCK_ITALIC,                        (const char *)"format-text-italic",        (const char *)"_Italic"},
+-    {(const char *)GTK_STOCK_JUMP_TO,                       (const char *)"go-jump",                   (const char *)"_Jump    to"},
+-    {(const char *)GTK_STOCK_JUSTIFY_CENTER,                (const char *)"format-justify-center",     (const char *)"_Center"},
+-    {(const char *)GTK_STOCK_JUSTIFY_FILL,                  (const char *)"format-justify-fill",       (const char *)"_Fill"},
+-    {(const char *)GTK_STOCK_JUSTIFY_LEFT,                  (const char *)"format-justify-left",       (const char *)"_Left"},
+-    {(const char *)GTK_STOCK_JUSTIFY_RIGHT,                 (const char *)"format-justify-right",      (const char *)"_Right"},
+-    {(const char *)GTK_STOCK_LEAVE_FULLSCREEN,              (const char *)"view-restore",              (const char *)"_Leave   Fullscreen"},
++    {(const char *)GTK_STOCK_INFO,                          (const char *)"dialog-information",        (const char *)"Information"},
++    {(const char *)GTK_STOCK_ITALIC,                        (const char *)"format-text-italic",        (const char *)"Italic"},
++    {(const char *)GTK_STOCK_JUMP_TO,                       (const char *)"go-jump",                   (const char *)"Jump    to"},
++    {(const char *)GTK_STOCK_JUSTIFY_CENTER,                (const char *)"format-justify-center",     (const char *)"Center"},
++    {(const char *)GTK_STOCK_JUSTIFY_FILL,                  (const char *)"format-justify-fill",       (const char *)"Fill"},
++    {(const char *)GTK_STOCK_JUSTIFY_LEFT,                  (const char *)"format-justify-left",       (const char *)"Left"},
++    {(const char *)GTK_STOCK_JUSTIFY_RIGHT,                 (const char *)"format-justify-right",      (const char *)"Right"},
++    {(const char *)GTK_STOCK_LEAVE_FULLSCREEN,              (const char *)"view-restore",              (const char *)"Leave   Fullscreen"},
+     {(const char *)GTK_STOCK_MISSING_IMAGE,                 (const char *)"image-missing",             NULL},
+-    {(const char *)GTK_STOCK_MEDIA_FORWARD,                 (const char *)"media-seek-forward",        (const char *)"_Forward"},
+-    {(const char *)GTK_STOCK_MEDIA_NEXT,                    (const char *)"media-skip-forward",        (const char *)"_Next"},
+-    {(const char *)GTK_STOCK_MEDIA_PAUSE,                   (const char *)"media-playback-pause",      (const char *)"P_ause"},
+-    {(const char *)GTK_STOCK_MEDIA_PLAY,                    (const char *)"media-playback-start",      (const char *)"_Play"},
+-    {(const char *)GTK_STOCK_MEDIA_PREVIOUS,                (const char *)"media-skip-backward",       (const char *)"Pre_vious"},
+-    {(const char *)GTK_STOCK_MEDIA_RECORD,                  (const char *)"media-record",              (const char *)"_Record"},
+-    {(const char *)GTK_STOCK_MEDIA_REWIND,                  (const char *)"media-seek-backward",       (const char *)"R_ewind"},
+-    {(const char *)GTK_STOCK_MEDIA_STOP,                    (const char *)"media-playback-stop",       (const char *)"_Stop"},
+-    {(const char *)GTK_STOCK_NETWORK,                       (const char *)"network-workgroup",         (const char *)"_Network"},
+-    {(const char *)GTK_STOCK_NEW,                           (const char *)"document-new",              (const char *)"_New"},
+-    {(const char *)GTK_STOCK_NO,                            NULL,                                (const char *)"_No"},
+-    {(const char *)GTK_STOCK_OK,                            NULL,                                (const char *)"_OK"},
+-    {(const char *)GTK_STOCK_OPEN,                          (const char *)"document-open",             (const char *)"_Open"},
++    {(const char *)GTK_STOCK_MEDIA_FORWARD,                 (const char *)"media-seek-forward",        (const char *)"Forward"},
++    {(const char *)GTK_STOCK_MEDIA_NEXT,                    (const char *)"media-skip-forward",        (const char *)"Next"},
++    {(const char *)GTK_STOCK_MEDIA_PAUSE,                   (const char *)"media-playback-pause",      (const char *)"Pause"},
++    {(const char *)GTK_STOCK_MEDIA_PLAY,                    (const char *)"media-playback-start",      (const char *)"Play"},
++    {(const char *)GTK_STOCK_MEDIA_PREVIOUS,                (const char *)"media-skip-backward",       (const char *)"Previous"},
++    {(const char *)GTK_STOCK_MEDIA_RECORD,                  (const char *)"media-record",              (const char *)"Record"},
++    {(const char *)GTK_STOCK_MEDIA_REWIND,                  (const char *)"media-seek-backward",       (const char *)"Rewind"},
++    {(const char *)GTK_STOCK_MEDIA_STOP,                    (const char *)"media-playback-stop",       (const char *)"Stop"},
++    {(const char *)GTK_STOCK_NETWORK,                       (const char *)"network-workgroup",         (const char *)"Network"},
++    {(const char *)GTK_STOCK_NEW,                           (const char *)"document-new",              (const char *)"New"},
++    {(const char *)GTK_STOCK_NO,                            NULL,                                (const char *)"No"},
++    {(const char *)GTK_STOCK_OK,                            NULL,                                (const char *)"OK"},
++    {(const char *)GTK_STOCK_OPEN,                          (const char *)"document-open",             (const char *)"Open"},
+     {(const char *)GTK_STOCK_ORIENTATION_PORTRAIT,          (const char *)"?",                         (const char *)"Portrait"},
+     {(const char *)GTK_STOCK_ORIENTATION_LANDSCAPE,         (const char *)"?",                         (const char *)"Landscape"},
+     {(const char *)GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE, (const char *)"?",                         (const char *)"Reverse  landscape"},
+     {(const char *)GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT,  (const char *)"?",                         (const char *)"Reverse  portrait"},
+ #ifdef GTK_STOCK_PAGE_SETUP
+-    {(const char *)GTK_STOCK_PAGE_SETUP,                    (const char *)"document-page-setup",       (const char *)"Page     Set_up"},
++    {(const char *)GTK_STOCK_PAGE_SETUP,                    (const char *)"document-page-setup",       (const char *)"Page     Setup"},
+ #endif
+-    {(const char *)GTK_STOCK_PASTE,                         (const char *)"edit-paste",                (const char *)"_Paste"},
+-    {(const char *)GTK_STOCK_PREFERENCES,                   (const char *)"preferences-system",        (const char *)"_Preferences"},
+-    {(const char *)GTK_STOCK_PRINT,                         (const char *)"document-print",            (const char *)"_Print"},
++    {(const char *)GTK_STOCK_PASTE,                         (const char *)"edit-paste",                (const char *)"Paste"},
++    {(const char *)GTK_STOCK_PREFERENCES,                   (const char *)"preferences-system",        (const char *)"Preferences"},
++    {(const char *)GTK_STOCK_PRINT,                         (const char *)"document-print",            (const char *)"Print"},
+ #ifdef GTK_STOCK_PRINT_ERROR
+     {(const char *)GTK_STOCK_PRINT_ERROR,                   (const char *)"printer-error",             NULL},
+ #endif
+ #ifdef GTK_STOCK_PRINT_PAUSED
+     {(const char *)GTK_STOCK_PRINT_PAUSED,                  NULL,                                NULL},
+ #endif
+-    {(const char *)GTK_STOCK_PRINT_PREVIEW,                 NULL,                                (const char *)"Print Pre_view"},
++    {(const char *)GTK_STOCK_PRINT_PREVIEW,                 NULL,                                (const char *)"Print Preview"},
+ #ifdef GTK_STOCK_PRINT_REPORT
+     {(const char *)GTK_STOCK_PRINT_REPORT,                  NULL,                                NULL},
+ #endif
+ #ifdef GTK_STOCK_PRINT_WARNING
+     {(const char *)GTK_STOCK_PRINT_WARNING,                 NULL,                                NULL},
+ #endif
+-    {(const char *)GTK_STOCK_PROPERTIES,                    (const char *)"document-properties",       (const char *)"_Properties"},
+-    {(const char *)GTK_STOCK_QUIT,                          (const char *)"application-exit",          (const char *)"_Quit"},
+-    {(const char *)GTK_STOCK_REDO,                          (const char *)"edit-redo",                 (const char *)"_Redo"},
+-    {(const char *)GTK_STOCK_REFRESH,                       (const char *)"view-refresh",              (const char *)"_Refresh"},
+-    {(const char *)GTK_STOCK_REMOVE,                        (const char *)"list-remove",               (const char *)"_Remove"},
+-    {(const char *)GTK_STOCK_REVERT_TO_SAVED,               (const char *)"document-revert",           (const char *)"_Revert"},
+-    {(const char *)GTK_STOCK_SAVE,                          (const char *)"document-save",             (const char *)"_Save"},
+-    {(const char *)GTK_STOCK_SAVE_AS,                       (const char *)"document-save-as",          (const char *)"Save     _As"},
+-    {(const char *)GTK_STOCK_SELECT_ALL,                    (const char *)"edit-select-all",           (const char *)"Select   _All"},
+-    {(const char *)GTK_STOCK_SELECT_COLOR,                  NULL,                                (const char *)"_Color"},
+-    {(const char *)GTK_STOCK_SELECT_FONT,                   NULL,                                (const char *)"_Font"},
+-    {(const char *)GTK_STOCK_SORT_ASCENDING,                (const char *)"view-sort-ascending",       (const char *)"_Ascending"},
+-    {(const char *)GTK_STOCK_SORT_DESCENDING,               (const char *)"view-sort-descending",      (const char *)"_Descending"},
+-    {(const char *)GTK_STOCK_SPELL_CHECK,                   (const char *)"tools-check-spelling",      (const char *)"_Spell   Check"},
+-    {(const char *)GTK_STOCK_STOP,                          (const char *)"process-stop",              (const char *)"_Stop"},
+-    {(const char *)GTK_STOCK_STRIKETHROUGH,                 (const char *)"format-text-strikethrough", (const char *)"_Strikethrough"},
+-    {(const char *)GTK_STOCK_UNDELETE,                      NULL,                                (const char *)"_Undelete"},
+-    {(const char *)GTK_STOCK_UNDERLINE,                     (const char *)"format-text-underline",     (const char *)"_Underline"},
+-    {(const char *)GTK_STOCK_UNDO,                          (const char *)"edit-undo",                 (const char *)"_Undo"},
++    {(const char *)GTK_STOCK_PROPERTIES,                    (const char *)"document-properties",       (const char *)"Properties"},
++    {(const char *)GTK_STOCK_QUIT,                          (const char *)"application-exit",          (const char *)"Quit"},
++    {(const char *)GTK_STOCK_REDO,                          (const char *)"edit-redo",                 (const char *)"Redo"},
++    {(const char *)GTK_STOCK_REFRESH,                       (const char *)"view-refresh",              (const char *)"Refresh"},
++    {(const char *)GTK_STOCK_REMOVE,                        (const char *)"list-remove",               (const char *)"Remove"},
++    {(const char *)GTK_STOCK_REVERT_TO_SAVED,               (const char *)"document-revert",           (const char *)"Revert"},
++    {(const char *)GTK_STOCK_SAVE,                          (const char *)"document-save",             (const char *)"Save"},
++    {(const char *)GTK_STOCK_SAVE_AS,                       (const char *)"document-save-as",          (const char *)"Save     As"},
++    {(const char *)GTK_STOCK_SELECT_ALL,                    (const char *)"edit-select-all",           (const char *)"Select   All"},
++    {(const char *)GTK_STOCK_SELECT_COLOR,                  NULL,                                (const char *)"Color"},
++    {(const char *)GTK_STOCK_SELECT_FONT,                   NULL,                                (const char *)"Font"},
++    {(const char *)GTK_STOCK_SORT_ASCENDING,                (const char *)"view-sort-ascending",       (const char *)"Ascending"},
++    {(const char *)GTK_STOCK_SORT_DESCENDING,               (const char *)"view-sort-descending",      (const char *)"Descending"},
++    {(const char *)GTK_STOCK_SPELL_CHECK,                   (const char *)"tools-check-spelling",      (const char *)"Spell   Check"},
++    {(const char *)GTK_STOCK_STOP,                          (const char *)"process-stop",              (const char *)"Stop"},
++    {(const char *)GTK_STOCK_STRIKETHROUGH,                 (const char *)"format-text-strikethrough", (const char *)"Strikethrough"},
++    {(const char *)GTK_STOCK_UNDELETE,                      NULL,                                (const char *)"Undelete"},
++    {(const char *)GTK_STOCK_UNDERLINE,                     (const char *)"format-text-underline",     (const char *)"Underline"},
++    {(const char *)GTK_STOCK_UNDO,                          (const char *)"edit-undo",                 (const char *)"Undo"},
+     {(const char *)GTK_STOCK_UNINDENT,                      (const char *)"format-indent-less",        NULL},
+-    {(const char *)GTK_STOCK_YES,                           NULL,                                (const char *)"_Yes"},
+-    {(const char *)GTK_STOCK_ZOOM_100,                      (const char *)"zoom-original",             (const char *)"_Normal  Size"},
+-    {(const char *)GTK_STOCK_ZOOM_FIT,                      (const char *)"zoom-fit-best",             (const char *)"Best     _Fit"},
+-    {(const char *)GTK_STOCK_ZOOM_IN,                       (const char *)"zoom-in",                   (const char *)"Zoom     _In"},
+-    {(const char *)GTK_STOCK_ZOOM_OUT,                      (const char *)"zoom-out",                  (const char *)"Zoom     _Out"},
++    {(const char *)GTK_STOCK_YES,                           NULL,                                (const char *)"Yes"},
++    {(const char *)GTK_STOCK_ZOOM_100,                      (const char *)"zoom-original",             (const char *)"Normal  Size"},
++    {(const char *)GTK_STOCK_ZOOM_FIT,                      (const char *)"zoom-fit-best",             (const char *)"Best     Fit"},
++    {(const char *)GTK_STOCK_ZOOM_IN,                       (const char *)"zoom-in",                   (const char *)"Zoom     In"},
++    {(const char *)GTK_STOCK_ZOOM_OUT,                      (const char *)"zoom-out",                  (const char *)"Zoom     Out"},
+ };
+ 
+ /**

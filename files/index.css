@@ -1,0 +1,31 @@
+a.btn {
+  cursor: pointer;
+}
+.card-deck.card-full-width .card {
+  max-width: calc(100% - 30px);
+}
+
+#footerlink  {
+  font-size:9px;
+}
+
+@media (min-width: 576px) {
+  .card-deck.card-small-width) .card {
+    max-width: calc(50% - 30px);
+  }
+}
+
+@media (min-width: 768px) {
+  .card-deck.card-small-width .card {
+    max-width: calc(33.333% - 30px);
+  }
+}
+
+@media (min-width: 992px) {
+  .card-deck.card-small-width .card {
+    max-width: calc(25% - 30px);
+  }
+  .card-deck.card-double-width .card {
+    max-width: calc(50% - 30px);
+  }
+}

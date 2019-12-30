@@ -1,0 +1,3 @@
+Cmnd_Alias	RASPION = /usr/local/sbin/contcap.sh, /usr/local/sbin/mitmoff.sh, /usr/local/sbin/mitmon.sh, /usr/local/sbin/mitmstat.sh, /usr/local/sbin/mitmweb.sh, /usr/local/sbin/scan.sh, /usr/local/sbin/canvul.sh, /bin/systemctl, /usr/bin/killall, /usr/bin/pgrep
+
+www-data	ALL=(ALL)	NOPASSWD:	RASPION
