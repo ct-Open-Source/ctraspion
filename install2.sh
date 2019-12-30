@@ -12,6 +12,7 @@ set -e
 WD=$(pwd)
 LOG=/var/log/raspion.log
 source ./.version
+source ./.defaults
 sudo touch $LOG
 sudo chown pi:pi $LOG
 
@@ -56,12 +57,17 @@ echo "* Softwaregrundkonfiguration ..." | tee -a $LOG
 sudo usermod -a -G wireshark pi >> $LOG 2>&1
 sudo usermod -a -G www-data pi >> $LOG 2>&1
 sudo cp $WD/files/ntopng.conf /etc/ntopng >> $LOG 2>&1
+sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng/ntopng.conf >> $LOG 2>&1
 sudo cp $WD/files/interfaces /etc/network >> $LOG 2>&1
+sudo sed -i "s/^  address #IPv4HOST#/  address $IPv4HOST/" /etc/network/interfaces >> $LOG 2>&1
+sudo sed -i "s/^  address #IPv6HOST#/  address $IPv6HOST/" /etc/network/interfaces >> $LOG 2>&1
 sudo cp $WD/files/hostapd.conf /etc/hostapd >> $LOG 2>&1
+sudo sed -i "s/^ssid=#SSID#/ssid=$SSID/" /etc/hostapd/hostapd.conf >> $LOG 2>&1
 sudo cp $WD/files/ipforward.conf /etc/sysctl.d >> $LOG 2>&1
 sudo cp $WD/files/hostname /etc/ >> $LOG 2>&1
 sudo cp $WD/files/raspion-sudo /etc/sudoers.d/ >> $LOG 2>&1
 sudo cp $WD/files/radvd.conf /etc/ >> $LOG 2>&1
+sudo sed -i "s/^  RDNSS #IPv6HOST#/  RDNSS $IPv6HOST/" /etc/radvd.conf >> $LOG 2>&1
 sudo mkdir -p /root/.mitmproxy >> $LOG 2>&1
 sudo cp $WD/files/config.yaml /root/.mitmproxy >> $LOG 2>&1
 mkdir -p /home/pi/.config/wireshark >> $LOG 2>&1
@@ -78,7 +84,7 @@ HERE
 
 echo "* Firewall-Regeln setzen und speichern ..." | tee -a $LOG
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE >> $LOG 2>&1
-sudo ip6tables -t nat -A POSTROUTING -o eth0 -s fd00:24::/64 -j MASQUERADE >> $LOG 2>&1
+sudo ip6tables -t nat -A POSTROUTING -o eth0 -s $IPv6NET/64 -j MASQUERADE >> $LOG 2>&1
 sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
 sudo ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
 sudo netfilter-persistent save >> $LOG 2>&1
@@ -95,7 +101,21 @@ cd /etc/lighttpd/conf-enabled >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-userdir.conf 10-userdir.conf >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-proxy.conf 10-proxy.conf >> $LOG 2>&1
 sudo cp $WD/files/10-dir-listing.conf . >> $LOG 2>&1
-sudo cp $WD/files/20-extport.conf . >> $LOG 2>&1
+sudo -s <<HERE
+echo '\$SERVER["socket"] == ":81" {
+        server.document-root = "/home/pi/public_html"
+        dir-listing.encoding = "utf-8"
+        \$HTTP["url"] =~ "^/caps(\$|/)" {
+            dir-listing.activate = "enable" 
+        }
+        \$HTTP["url"] =~ "^/scans(\$|/)" {
+           dir-listing.activate = "enable" 
+        }
+        \$HTTP["url"] =~ "^/admin" {
+                proxy.server = ( "" => (( "host" => "'$IPv4HOST'", "port" => "80")) )
+        }
+}' >> /etc/lighttpd/conf-enabled/20-extport.conf
+HERE
 sudo chmod g+s /home/pi/public_html/caps >> $LOG 2>&1
 sudo chmod 777 /home/pi/public_html/caps >> $LOG 2>&1
 sudo chgrp www-data /home/pi/public_html/caps >> $LOG 2>&1
@@ -107,6 +127,11 @@ fi
 sudo mkdir -p /etc/pihole >> $LOG 2>&1
 sudo chown pihole:pihole /etc/pihole >> $LOG 2>&1
 sudo cp $WD/files/setupVars.conf /etc/pihole >> $LOG 2>&1
+sudo sed -i "s/IPV4_ADDRESS=#IPv4HOST#/IPV4_ADDRESS=$IPv4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/IPV6_ADDRESS=#IPv6HOST#/IPV6_ADDRESS=$IPv6HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/DHCP_ROUTER=#IPv4HOST#/DHCP_ROUTER=$IPv4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/DHCP_START=#DHCPv4START#/DHCP_START=$DHCPv4START/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/DHCP_END=#DHCPv4END#/DHCP_END=$DHCPv4END/" /etc/pihole/setupVars.conf >> $LOG 2>&1
 sudo -s <<HERE
 curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended >> $LOG 2>&1
 HERE
