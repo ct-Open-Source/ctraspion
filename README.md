@@ -6,7 +6,7 @@ Its initial releases incorporated [Pi-hole](https://pi-hole.net/), [ntopng](http
 
 ## Requirements
 
-Use a Raspberry Pi 3 or 4 for decent performance. Wireshark(-gtk) will be dsiplayed by [Broadwayd](https://developer.gnome.org/gtk3/stable/broadwayd.html) within a web browser window.
+Use a Raspberry Pi 3 or 4 for decent performance. Wireshark(-gtk) will be displayed by [Broadwayd](https://developer.gnome.org/gtk3/stable/broadwayd.html) within a web browser window.
 
 ## Download
 
