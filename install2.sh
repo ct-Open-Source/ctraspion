@@ -114,7 +114,7 @@ echo '\$SERVER["socket"] == ":81" {
         \$HTTP["url"] =~ "^/admin" {
                 proxy.server = ( "" => (( "host" => "'$IPv4HOST'", "port" => "80")) )
         }
-}' >> /etc/lighttpd/conf-enabled/20-extport.conf
+}' > /etc/lighttpd/conf-enabled/20-extport.conf
 HERE
 sudo chmod g+s /home/pi/public_html/caps >> $LOG 2>&1
 sudo chmod 777 /home/pi/public_html/caps >> $LOG 2>&1
