@@ -1,10 +1,12 @@
-# c't-Raspion
+# c't-Raspion - DEVELOPMENT 1.1.0
 
 <img src="files/logo.png" alt="drawing" width="100" align="right">Turns a Raspberry Pi into a WLAN router to take a look at network traffic of smart home and IoT devices. All apps are reachable by a web browser. Published by [german computer magazine c't](https://ct.de/).
 
 Its initial releases incorporated [Pi-hole](https://pi-hole.net/), [ntopng](https://www.ntop.org/products/traffic-analysis/ntop/), [Wireshark](https://www.wireshark.org/), [Shell In A Box](https://github.com/shellinabox/shellinabox) and [mitmproxy](https://mitmproxy.org/).
 
 ## Changelog
+See [CHANGELOG.md](CHANGELOG.md) for details
+
  - Initial commit
 
 ## Requirements
