@@ -5,8 +5,9 @@
 Its initial releases incorporated [Pi-hole](https://pi-hole.net/), [ntopng](https://www.ntop.org/products/traffic-analysis/ntop/), [Wireshark](https://www.wireshark.org/), [Shell In A Box](https://github.com/shellinabox/shellinabox) and [mitmproxy](https://mitmproxy.org/).
 
 ## Changelog
-See [CHANGELOG.md](CHANGELOG.md)
- - 01.01.2020 - Diggen85 <Benny_Stark@live.de>
+See [CHANGELOG.md](CHANGELOG.md) for details
+
+01.01.2020 - [Benny Stark](https://github.com/Diggen85)
   - changing ~/public_html to /var/www/raspion
 
 ## Requirements
