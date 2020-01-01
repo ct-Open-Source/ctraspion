@@ -6,6 +6,9 @@
 # (c) 2019-2020 c't magazin, Germany, Hannover
 # see: https://ct.de/-123456 for more information
 # 
+# 01.01.2020 - Diggen85 <Benny_Stark@live.de> 
+# - changing ~/public_html to /var/www/raspion
+#
 
 set -e
 
@@ -15,6 +18,7 @@ source ./.version
 source ./.defaults
 sudo touch $LOG
 sudo chown pi:pi $LOG
+
 
 trap 'error_report $LINENO' ERR
 error_report() {
@@ -98,12 +102,12 @@ sudo systemctl enable wireshark >> $LOG 2>&1
 
 echo "* Weboberfläche hinzufügen ..." | tee -a $LOG
 cd /etc/lighttpd/conf-enabled >> $LOG 2>&1
-sudo ln -sf ../conf-available/10-userdir.conf 10-userdir.conf >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-proxy.conf 10-proxy.conf >> $LOG 2>&1
-sudo cp $WD/files/10-dir-listing.conf . >> $LOG 2>&1
+sudo cp $WD/files/10-dir-listing.conf ../conf-available/10-dir-listing.conf >> $LOG 2>&1
+sudo ln -sf ../conf-available/10-dir-listing.conf . >> $LOG 2>&1
 sudo -s <<HERE
 echo '\$SERVER["socket"] == ":81" {
-        server.document-root = "/home/pi/public_html"
+        server.document-root = "/var/www/raspion"
         dir-listing.encoding = "utf-8"
         \$HTTP["url"] =~ "^/caps(\$|/)" {
             dir-listing.activate = "enable" 
@@ -114,11 +118,12 @@ echo '\$SERVER["socket"] == ":81" {
         \$HTTP["url"] =~ "^/admin" {
                 proxy.server = ( "" => (( "host" => "'$IPv4HOST'", "port" => "80")) )
         }
-}' > /etc/lighttpd/conf-enabled/20-extport.conf
+}' > /etc/lighttpd/conf-available/20-extport.conf
 HERE
-sudo chmod g+s /home/pi/public_html/caps >> $LOG 2>&1
-sudo chmod 777 /home/pi/public_html/caps >> $LOG 2>&1
-sudo chgrp www-data /home/pi/public_html/caps >> $LOG 2>&1
+sudo ln -sf ../conf-available/20-extport.conf .
+sudo chmod g+s /var/www/raspion/caps >> $LOG 2>&1
+sudo chmod 777 /var/www/raspion/caps >> $LOG 2>&1
+sudo chgrp www-data /var/www/raspion/caps >> $LOG 2>&1
 
 echo "* Pi-hole installieren ..." | tee -a $LOG
 if ! id pihole >/dev/null 2>&1; then
