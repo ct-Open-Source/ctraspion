@@ -1,5 +1,9 @@
-raspion (100) unstable; urgency=medium
+raspion (110) unstable; urgency=medium
 
   * Initial release
 
  -- Peter Siering <ps@ct.de>  Wed, 12 Dec 2019 17:00:00 +0100
+ 
+  * move ~/public_html zu /var/ww/raspion
+
+ -- Benny Stark <Benny_Stark@live.de>  Thu, 02 Jan 2020 19:00:00 +0100

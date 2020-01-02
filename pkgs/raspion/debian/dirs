@@ -1,4 +1,4 @@
-home/pi/public_html/scans
-home/pi/public_html/caps
-home/pi/public_html
+var/www/raspion/scans
+var/www/raspion/caps
+var/www/raspion
 

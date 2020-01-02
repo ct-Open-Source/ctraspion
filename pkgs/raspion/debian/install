@@ -1,10 +1,10 @@
 ../../sbin/* usr/local/sbin
 ../../files/prefix_delegation etc/dhcp/dhclient-exit-hooks.d
-../../files/*.png home/pi/public_html
-../../files/*.php home/pi/public_html
-../../files/*.css home/pi/public_html
-../../files/*.js home/pi/public_html
-../../files/*.ico home/pi/public_html
+../../files/*.png var/www/raspion
+../../files/*.php var/www/raspion
+../../files/*.css var/www/raspion
+../../files/*.js var/www/raspion
+../../files/*.ico var/www/raspion
 ../../files/*.service etc/systemd/system
 
 
