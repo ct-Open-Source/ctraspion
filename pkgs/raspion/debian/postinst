@@ -20,6 +20,35 @@ set -e
 
 case "$1" in
     configure)
+    #add pi user to wireshark and www-data
+    usermod -a -G wireshark pi
+    usermod -a -G www-data pi
+    
+    #add iptable rules
+    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE 
+    ip6tables -t nat -A POSTROUTING -o eth0 -s #IPv6NET#/64 -j MASQUERADE 
+    iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 
+    ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 
+    #save policys
+    netfilter-persistent save
+
+    #generate hostapd pw
+    
+    WPAPW=$(pwgen --ambiguous 9) 
+    echo "wpa_passphrase=$WPAPW" >> /etc/hostapd/hostapd.conf.raspion
+    echo "The hostapd Password ist: $WPAPW"
+
+
+    #unmask hostapd and enable radvd
+    systemctl unmask hostapd
+    systemctl enable radvd
+
+    #set public_html permissions
+    chmod g+s /home/pi/public_html/caps
+    chmod 777 /home/pi/public_html/caps
+    chgrp www-data /home/pi/public_html/caps
+
+    
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

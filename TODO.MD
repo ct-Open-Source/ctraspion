@@ -1,14 +1,21 @@
 # TODO
 - debian/rules
+    - depencies ok ?
     - ~~clean should disable cutomizations~~
-- clear pre-/postrm script for modified config files
-    - dpkg-divert
+- ~~ clear pre-/postrm script for modified config files ~~
+    - ~~dpkg-divert~~ 
 - ~~keep own configs under /usr or /opt ??~~
 - ~~placing system units not directly in etc/systemd/system~~
     - place broadwayd.service and config in lib-gtk pkg
 		- mitmweb.service in mitm pkg
 		- wireshark.service in wireshark pkg ???
-- debconf for customazation
+- debconf for customization ???
     - split in Easy and Expert?
 - Move Files from public_html to /var/www
 - Split pkg raspion in data(www) && conf ???
+- better check for iptable rules in maintainerscripts
+    - postinst check for upgrade if already exists
+    - postrm remove them
+    - modify directly netfilers-persistent savefile ???
+    - work with comments???
+- version-number automation ???

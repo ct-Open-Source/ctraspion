@@ -21,13 +21,16 @@ fi
 source ../../config.sh
 
 customize() {
-    echo "Replacing defaults in Package Config"
+    echo "Replacing defaults in installed Config"
     sed -i.orig "s/^  address #IPv4HOST#/  address $IPv4HOST/" files/interfaces 2>&1 | tee -a $LOGPATH
     sed -i.orig "s/^  address #IPv6HOST#/  address $IPv6HOST/" files/interfaces 2>&1 | tee -a $LOGPATH
     sed -i.orig "s/^-m=#IPv4NET#/-m=$IPv4NET/" files/ntopng.conf 2>&1 | tee -a $LOGPATH
     sed -i.orig "s/^ssid=#SSID#/ssid=$SSID/" files/hostapd.conf 2>&1 | tee -a $LOGPATH
     sed -i.orig "s/^  RDNSS #IPv6HOST#/  RDNSS $IPv6HOST/" files/radvd.conf 2>&1 | tee -a $LOGPATH
     sed -i.orig "s/#IPv4HOST#/  RDNSS $IPv4HOST/" files/20-extport.conf 2>&1 | tee -a $LOGPATH
+    
+    echo "Replacing defaults in Package Config"
+    sed -i.orig "s/#IPv6NETT#/$IPv6NET/" debian/postinst 2>&1 | tee -a $LOGPATH
 
 }
 
