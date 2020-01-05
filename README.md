@@ -8,6 +8,7 @@ Its initial releases incorporated [Pi-hole](https://pi-hole.net/), [ntopng](http
 See [CHANGELOG.md](CHANGELOG.md) for details
 
  - Initial commit
+ - modification in progress to build and install raspion as package
 
 ## Requirements
 

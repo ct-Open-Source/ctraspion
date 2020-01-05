@@ -1,8 +1,27 @@
 #!/usr/bin/make -f
-DH_VERBOSE = 1
-override_dh_usrlocal:
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
 
-%:
-	dh $@ --with systemd
+#check that customize.sh is executable
+all:
+	ifndef $(shell [[ -x ./customize.sh ]])
+		chmod ugo+x ./customize.sh
+	endif
+
+#skip - we copy data ourself
+override_dh_usrlocal:
+	 
+	
+clean:
+	dh clean
+	./customize.sh clean
+build:
+	dh build
+	./customize.sh customize
+binary:
+	dh binary
+
+
 
 

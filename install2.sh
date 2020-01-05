@@ -10,9 +10,9 @@
 set -e
 
 WD=$(pwd)
-LOG=/var/log/raspion.log
-source ./.version
-source ./.defaults
+LOG=./raspion-devinst.log
+source ./config.sh
+
 sudo touch $LOG
 sudo chown pi:pi $LOG
 
@@ -20,6 +20,7 @@ trap 'error_report $LINENO' ERR
 error_report() {
     echo "Installation leider fehlgeschlagen in Zeile $1."
 }
+
 
 echo "==> Einrichtung des c't-Raspion ($VER)" | tee -a $LOG
 
@@ -46,41 +47,53 @@ sudo ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime >> $LOG 2>&1
 sudo cp files/timezone /etc >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive tzdata >> $LOG 2>&1
 
+
+
 echo "* Pakete vorkonfigurieren ..." | tee -a $LOG
 sudo debconf-set-selections debconf/wireshark >> $LOG 2>&1
 sudo debconf-set-selections debconf/iptables-persistent >> $LOG 2>&1
 
-echo "* Pakete installieren ..." | tee -a $LOG
-sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $LOG 2>&1
+echo "* lokale Pakete erstellen ..." | tee -a $LOG
+cd pkgs/raspion
+dpkg-buildpackage -uc -us | tee -a $LOG
+
+
+echo "* lokale Pakete installieren ..." | tee -a $LOG
+##sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $LOG 2>&1
+
+#DEV 
+exit 1337
 
 echo "* Softwaregrundkonfiguration ..." | tee -a $LOG
 sudo usermod -a -G wireshark pi >> $LOG 2>&1
 sudo usermod -a -G www-data pi >> $LOG 2>&1
-sudo cp $WD/files/ntopng.conf /etc/ntopng >> $LOG 2>&1
-sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng/ntopng.conf >> $LOG 2>&1
-sudo cp $WD/files/interfaces /etc/network >> $LOG 2>&1
-sudo sed -i "s/^  address #IPv4HOST#/  address $IPv4HOST/" /etc/network/interfaces >> $LOG 2>&1
-sudo sed -i "s/^  address #IPv6HOST#/  address $IPv6HOST/" /etc/network/interfaces >> $LOG 2>&1
-sudo cp $WD/files/hostapd.conf /etc/hostapd >> $LOG 2>&1
-sudo sed -i "s/^ssid=#SSID#/ssid=$SSID/" /etc/hostapd/hostapd.conf >> $LOG 2>&1
-sudo cp $WD/files/ipforward.conf /etc/sysctl.d >> $LOG 2>&1
-sudo cp $WD/files/hostname /etc/ >> $LOG 2>&1
-sudo cp $WD/files/raspion-sudo /etc/sudoers.d/ >> $LOG 2>&1
-sudo cp $WD/files/radvd.conf /etc/ >> $LOG 2>&1
-sudo sed -i "s/^  RDNSS #IPv6HOST#/  RDNSS $IPv6HOST/" /etc/radvd.conf >> $LOG 2>&1
-sudo mkdir -p /root/.mitmproxy >> $LOG 2>&1
-sudo cp $WD/files/config.yaml /root/.mitmproxy >> $LOG 2>&1
-mkdir -p /home/pi/.config/wireshark >> $LOG 2>&1
-cp $WD/files/recent /home/pi/.config/wireshark >> $LOG 2>&1
-cp $WD/files/preferences_wireshark /home/pi/.config/wireshark/preferences >> $LOG 2>&1
-sudo cp $WD/files/settings.ini /etc/gtk-3.0 >> $LOG 2>&1
-sudo cp -f $WD/files/shellinabox /etc/default >> $LOG 2>&1
-cd /usr/lib/python3/dist-packages/mitmproxy/addons/onboardingapp/static >> $LOG 2>&1
-sudo ln -sf /usr/share/fonts-font-awesome fontawesome >> $LOG 2>&1
-PW=$(pwgen --ambiguous 9)
-sudo -s <<HERE
-echo "wpa_passphrase=$PW" >> /etc/hostapd/hostapd.conf
-HERE
+##sudo cp $WD/files/ntopng.conf /etc/ntopng >> $LOG 2>&1
+##sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng/ntopng.conf >> $LOG 2>&1
+##sudo cp $WD/files/interfaces /etc/network >> $LOG 2>&1
+##sudo sed -i "s/^  address #IPv4HOST#/  address $IPv4HOST/" /etc/network/interfaces >> $LOG 2>&1
+##sudo sed -i "s/^  address #IPv6HOST#/  address $IPv6HOST/" /etc/network/interfaces >> $LOG 2>&1
+##sudo cp $WD/files/hostapd.conf /etc/hostapd >> $LOG 2>&1
+##sudo sed -i "s/^ssid=#SSID#/ssid=$SSID/" /etc/hostapd/hostapd.conf >> $LOG 2>&1
+##PW=$(pwgen --ambiguous 9)
+##sudo -s <<HERE
+##echo "wpa_passphrase=$PW" >> /etc/hostapd/hostapd.conf
+##HERE
+
+##sudo cp $WD/files/ipforward.conf /etc/sysctl.d >> $LOG 2>&1
+##sudo cp $WD/files/hostname /etc/ >> $LOG 2>&1
+##sudo cp $WD/files/raspion-sudo /etc/sudoers.d/ >> $LOG 2>&1
+##sudo cp $WD/files/radvd.conf /etc/ >> $LOG 2>&1
+##sudo sed -i "s/^  RDNSS #IPv6HOST#/  RDNSS $IPv6HOST/" /etc/radvd.conf >> $LOG 2>&1
+##sudo mkdir -p /root/.mitmproxy >> $LOG 2>&1
+##sudo cp $WD/files/config.yaml /root/.mitmproxy >> $LOG 2>&1
+##mkdir -p /home/pi/.config/wireshark >> $LOG 2>&1
+##cp $WD/files/recent /home/pi/.config/wireshark >> $LOG 2>&1
+##cp $WD/files/preferences_wireshark /home/pi/.config/wireshark/preferences >> $LOG 2>&1
+##sudo cp $WD/files/settings.ini /etc/gtk-3.0 >> $LOG 2>&1
+##sudo cp -f $WD/files/shellinabox /etc/default >> $LOG 2>&1
+##cd /usr/lib/python3/dist-packages/mitmproxy/addons/onboardingapp/static >> $LOG 2>&1
+##sudo ln -sf /usr/share/fonts-font-awesome fontawesome >> $LOG 2>&1
+
 
 echo "* Firewall-Regeln setzen und speichern ..." | tee -a $LOG
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE >> $LOG 2>&1
@@ -97,25 +110,25 @@ sudo systemctl enable broadwayd >> $LOG 2>&1
 sudo systemctl enable wireshark >> $LOG 2>&1
 
 echo "* Weboberfläche hinzufügen ..." | tee -a $LOG
-cd /etc/lighttpd/conf-enabled >> $LOG 2>&1
-sudo ln -sf ../conf-available/10-userdir.conf 10-userdir.conf >> $LOG 2>&1
-sudo ln -sf ../conf-available/10-proxy.conf 10-proxy.conf >> $LOG 2>&1
-sudo cp $WD/files/10-dir-listing.conf . >> $LOG 2>&1
-sudo -s <<HERE
-echo '\$SERVER["socket"] == ":81" {
-        server.document-root = "/home/pi/public_html"
-        dir-listing.encoding = "utf-8"
-        \$HTTP["url"] =~ "^/caps(\$|/)" {
-            dir-listing.activate = "enable" 
-        }
-        \$HTTP["url"] =~ "^/scans(\$|/)" {
-           dir-listing.activate = "enable" 
-        }
-        \$HTTP["url"] =~ "^/admin" {
-                proxy.server = ( "" => (( "host" => "'$IPv4HOST'", "port" => "80")) )
-        }
-}' > /etc/lighttpd/conf-enabled/20-extport.conf
-HERE
+##cd /etc/lighttpd/conf-enabled >> $LOG 2>&1
+##sudo ln -sf ../conf-available/10-userdir.conf 10-userdir.conf >> $LOG 2>&1
+##sudo ln -sf ../conf-available/10-proxy.conf 10-proxy.conf >> $LOG 2>&1
+##sudo cp $WD/files/10-dir-listing.conf . >> $LOG 2>&1
+#sudo -s <<HERE
+#echo '\$SERVER["socket"] == ":81" {
+#        server.document-root = "/home/pi/public_html"
+#        dir-listing.encoding = "utf-8"
+#        \$HTTP["url"] =~ "^/caps(\$|/)" {
+#            dir-listing.activate = "enable" 
+#        }
+#        \$HTTP["url"] =~ "^/scans(\$|/)" {
+#           dir-listing.activate = "enable" 
+#        }
+#        \$HTTP["url"] =~ "^/admin" {
+#                proxy.server = ( "" => (( "host" => "'$IPv4HOST'", "port" => "80")) )
+#        }
+#}' > /etc/lighttpd/conf-enabled/20-extport.conf
+#HERE
 sudo chmod g+s /home/pi/public_html/caps >> $LOG 2>&1
 sudo chmod 777 /home/pi/public_html/caps >> $LOG 2>&1
 sudo chgrp www-data /home/pi/public_html/caps >> $LOG 2>&1
@@ -143,9 +156,13 @@ sudo systemctl restart pihole-FTL >> $LOG 2>&1
 sudo pihole -f restartdns >> $LOG 2>&1
 sudo cp $WD/files/hosts /etc/ >> $LOG 2>&1
 
+# HOSTAPD Config - build PW
+WPAPW=$(pwgen --ambiguous 9)
+sudo sh -c 'echo "wpa_passphrase=$WPAPW" >> files/hostapd.conf'
+
 echo "==> Installation des c't-Raspion erfolgreich abgeschlossen." | tee -a $LOG
 echo ""
-echo "Das Passwort für das WLAN zur Beobachtung lautet: $PW"
+echo "Das Passwort für das WLAN zur Beobachtung lautet: $WPAPW"
 echo "Notieren Sie dieses bitte, ändern Sie auch gleich das Passwort"
 echo "für den Benutzer pi (mit passwd)."
 echo ""

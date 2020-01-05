@@ -1,10 +1,34 @@
-../../sbin/* usr/local/sbin
-../../files/prefix_delegation etc/dhcp/dhclient-exit-hooks.d
-../../files/*.png home/pi/public_html
-../../files/*.php home/pi/public_html
-../../files/*.css home/pi/public_html
-../../files/*.js home/pi/public_html
-../../files/*.ico home/pi/public_html
-../../files/*.service etc/systemd/system
+#Webfrontend Files
+html/* home/pi/public_html
+
+#Scripts for executing Webfrontend
+scripts/* usr/local/sbin
+
+#Cusomized configs
+files/interfaces /etc/network
+files/hostapd.conf /etc/hostapd
+files/radvd.conf /etc/
+files/20-extport.conf /etc/lighttpd/conf-available
+
+# replaced conf from other packages
+files/ntopng.conf /etc/ntopng
+files/ipforward.conf /etc/sysctl.d 
+files/raspion-sudo /etc/sudoers.d
+files/hostname /etc/
+files/settings.ini /etc/gtk-3.0
+files/shellinabox /etc/default
+
+# Addional conf for other packages
+files/prefix_delegation etc/dhcp/dhclient-exit-hooks.d
+files/10-dir-listing.conf /etc/lighttpd/conf-available
+files/20-extport.conf /etc/lighttpd/conf-available
+
+
+#conf in user dirs
+files/config.yaml /root/.mitmproxy
+files/recent /home/pi/.config/wireshark
+files/preferences_wireshark /home/pi/.config/wireshark/preferences
+
+units/ etc/systemd/system
 
 
