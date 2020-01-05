@@ -1,6 +1,7 @@
-/etc/lighttpd/conf-enabled/10-userdir.conf /etc/lighttpd/conf-available/10-userdir.conf
-/etc/lighttpd/conf-enabled/10-proxy.conf /etc/lighttpd/conf-available/10-proxy.conf
+/etc/lighttpd/conf-available/10-userdir.conf /etc/lighttpd/conf-enabled/10-userdir.conf 
+/etc/lighttpd/conf-available/10-proxy.conf /etc/lighttpd/conf-enabled/10-proxy.conf
 
-/etc/lighttpd/conf-enabled/10-dir-listing.conf /etc/lighttpd/conf-available/10-userdir.conf
-/etc/lighttpd/conf-enabled/20-extport.conf /etc/lighttpd/conf-available/20-extport.conf
+/etc/lighttpd/conf-available/10-userdir.conf /etc/lighttpd/conf-enabled/10-dir-listing.conf
+/etc/lighttpd/conf-available/20-extport.conf /etc/lighttpd/conf-enabled/20-extport.conf
+
 /usr/share/fonts-font-awesome usr/lib/python3/dist-packages/mitmproxy/addons/onboardingapp/static/fontawesome

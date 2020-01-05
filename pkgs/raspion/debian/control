@@ -2,14 +2,14 @@ Source: raspion
 Section: unknown
 Priority: optional
 Maintainer: Peter Siering <ps@ct.de>
-Build-Depends: debhelper (>=10)
+Build-Depends: debhelper (>=11), dh-exec, config-package-dev
 Standards-Version: 4.0.0
 Homepage: https://ct.de/-4606645
 
 Package: raspion
 Architecture: all
 Depends: lighttpd, wireshark-gtk, shellinabox, mitmproxy, bridge-utils, ipv6calc, hostapd, nmap, xsltproc, tcpreplay, pwgen, iptables-persistent, libgtk-3-bin, ntopng, radvd
-Description: Meta-Paket zur c't-Raspion-Installation
+Description: Data&Config-Paket zur c't-Raspion-Installation
  Dieses Paket holt den relevanten Pakete zur Einrichtung eines 
  c't-Raspion zusammen, schreibt deren Konfigurationsdateien bei
  einer initialen Instalaltion neu und richtet seine eigene

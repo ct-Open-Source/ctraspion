@@ -1,3 +1,5 @@
+#!/usr/bin/dh-exec --with=install
+
 #Webfrontend Files
 html/* home/pi/public_html
 
@@ -13,16 +15,16 @@ files/raspion-sudo /etc/sudoers.d
 #conf in user dirs
 files/config.yaml /root/.mitmproxy
 files/recent /home/pi/.config/wireshark
-files/preferences_wireshark /home/pi/.config/wireshark/preferences
+files/preferences_wireshark => /home/pi/.config/wireshark/preferences
 
 # displace conf over config-package
-files/ntopng.conf /etc/ntopng/ntopng.conf.raspion
-files/ipforward.conf /etc/sysctl.d/ipforward.conf.raspion
-files/hostname /etc/hostname.raspion
-files/settings.ini /etc/gtk-3.0/settings.ini.raspion
-files/shellinabox /etc/default/shellinabox.raspion
-files/interfaces /etc/network/interfaces.raspion
-files/hostapd.conf /etc/hostapd/hostapd.conf.raspion
-files/radvd.conf /etc/radvd.conf.raspion
+files/ntopng.conf => /etc/ntopng/ntopng.conf.raspion
+files/ipforward.conf => /etc/sysctl.d/ipforward.conf.raspion
+files/hostname => /etc/hostname.raspion
+files/settings.ini => /etc/gtk-3.0/settings.ini.raspion
+files/shellinabox => /etc/default/shellinabox.raspion
+files/interfaces => /etc/network/interfaces.raspion
+files/hostapd.conf => /etc/hostapd/hostapd.conf.raspion
+files/radvd.conf => /etc/radvd.conf.raspion
 
 

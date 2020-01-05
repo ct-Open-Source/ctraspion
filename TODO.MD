@@ -5,9 +5,10 @@
     - dpkg-divert
 - ~~keep own configs under /usr or /opt ??~~
 - ~~placing system units not directly in etc/systemd/system~~
-    - place broadwayd.service in libgtk pkg
+    - place broadwayd.service and config in lib-gtk pkg
 		- mitmweb.service in mitm pkg
 		- wireshark.service in wireshark pkg ???
 - debconf for customazation
     - split in Easy and Expert?
-- Move Files from public_html
+- Move Files from public_html to /var/www
+- Split pkg raspion in data(www) && conf ???
