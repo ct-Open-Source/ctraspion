@@ -3,13 +3,17 @@
 # output every command that modifies files on the build system.
 export DH_VERBOSE = 1
 
+#some Helpers
+DHOPTS ?= --with config-package
+DH=dh $@ $(DHOPTS)
+
 #check that customize.sh is executable
 all:
 	ifndef $(shell [[ -x ./customize.sh ]])
 		chmod ugo+x ./customize.sh
 	endif
 
-#skip - we copy data ourself
+#skip - we want data there
 override_dh_usrlocal:
 
 #override for multiple services
@@ -18,15 +22,15 @@ override_dh_installsystemd:
 	dh_installsystemd --name wireshark wireshark.service
 	dh_installsystemd --name mitmweb mitmweb.service
 
-#add customize to std actions
+#add customize.sh to needed targets
 clean:
-	dh clean
+	$(DH) clean
 	./customize.sh clean
 build:
-	dh build
+	$(DH) build
 	./customize.sh customize
 binary:
-	dh binary
+	$(DH) binary
 
 
 
