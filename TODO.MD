@@ -19,3 +19,9 @@
     - modify directly netfilers-persistent savefile ???
     - work with comments???
 - version-number automation ???
+- use hostnamectl???
+- mv customize.sh to raspion/debian/
+    - maybe use transform?
+    - source config.sh from another place
+- split install-dev into build-pkg and modify system
+    - better way for modify system / use raspi-config???
