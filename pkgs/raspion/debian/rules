@@ -11,8 +11,14 @@ all:
 
 #skip - we copy data ourself
 override_dh_usrlocal:
-	 
-	
+
+#override for multiple services
+override_dh_installsystemd: 
+	dh_installsystemd --name broadwayd broadwayd.service
+	dh_installsystemd --name wireshark wireshark.service
+	dh_installsystemd --name mitmweb mitmweb.service
+
+#add customize to std actions
 clean:
 	dh clean
 	./customize.sh clean
