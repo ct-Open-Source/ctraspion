@@ -1,18 +1,16 @@
 #!/usr/bin/make -f
 # See debhelper(7) (uncomment to enable)
 # output every command that modifies files on the build system.
-export DH_VERBOSE = 1
+export DH_VERBOSE=1
 
 #some Helpers
 DHOPTS ?= --with config-package
 DH=dh $@ $(DHOPTS)
 
-#check that customize.sh is executable
-$(shell test -x ./customize.sh || chmod ugo+x ./customize.sh)
 #check that install is exec for dh-exec
 $(shell test -x debian/install || chmod ugo+x debian/install)
 
-#skip - we want data under usrlocal
+#skip - we are bad, we want data under /usr/local
 override_dh_usrlocal:
 
 #override for multiple services
@@ -24,10 +22,8 @@ override_dh_installsystemd:
 #add customize.sh to needed targets
 clean:
 	$(DH)
-	./customize.sh clean
 build:
 	$(DH)
-	./customize.sh customize
 binary:
 	$(DH)
 

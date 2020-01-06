@@ -13,15 +13,25 @@
     - split in Easy and Expert?
 - Move Files from public_html to /var/www
 - Split pkg raspion in data(www) && conf ???
-- better check for iptable rules in maintainerscripts
-    - postinst check for upgrade if already exists
-    - postrm remove them
-    - modify directly netfilers-persistent savefile ???
-    - work with comments???
 - version-number automation ???
 - use hostnamectl???
-- mv customize.sh to raspion/debian/
-    - maybe use transform?
-    - source config.sh from another place
+- ~~mv customize.sh to raspion/debian/~~
+    - ~~maybe use transform?~~
+    - ~~source config.sh from another place~~
 - split install-dev into build-pkg and modify system
     - better way for modify system / use raspi-config???
+- add proper pre/postrm
+    - save changes in postinst
+    - maybe checksum etc files for upgrade
+    - save services
+    - hidden /etc/*conf should be handeled by config-package-dev
+    - better check for iptable rules in maintainerscripts
+        - postinst check for upgrade if already exists
+        - postrm remove them
+        - modify directly netfilers-persistent savefile ???
+        - work with comments???
+- etc.templates
+    - ntopng just appends
+    - shellinabox static replace
+    - gtk settings.ini static replac
+    - ~~hosts, hostname static replace~~

@@ -1,0 +1,8 @@
+#hide other packages config
+#but replace manual in postinst
+/etc/ntopng/ntopng.conf
+/etc/gtk-3.0/settings.ini
+/etc/default/shellinabox
+/etc/network/interfaces
+/etc/hostapd/hostapd.conf
+/etc/radvd.conf

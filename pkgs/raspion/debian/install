@@ -6,25 +6,17 @@ html/* home/pi/public_html
 #Scripts for executing Webfrontend
 scripts/* usr/local/sbin
 
-# Addional conf for other packages
-files/prefix_delegation etc/dhcp/dhclient-exit-hooks.d
+# Addional conf for other packages - this are for our conffile
+files/raspion-sudo /etc/sudoers.d
+files/99-raspion_ipforward.conf /etc/sysctl.d
+files/prefix_delegation /etc/dhcp/dhclient-exit-hooks.d
 files/10-dir-listing.conf /etc/lighttpd/conf-available
 files/20-extport.conf /etc/lighttpd/conf-available
-files/raspion-sudo /etc/sudoers.d
 
 #conf in user dirs
 files/config.yaml /root/.mitmproxy
 files/recent /home/pi/.config/wireshark
 files/preferences_wireshark => /home/pi/.config/wireshark/preferences
 
-# displace conf over config-package
-files/ntopng.conf => /etc/ntopng/ntopng.conf.raspion
-files/ipforward.conf => /etc/sysctl.d/ipforward.conf.raspion
-files/hostname => /etc/hostname.raspion
-files/settings.ini => /etc/gtk-3.0/settings.ini.raspion
-files/shellinabox => /etc/default/shellinabox.raspion
-files/interfaces => /etc/network/interfaces.raspion
-files/hostapd.conf => /etc/hostapd/hostapd.conf.raspion
-files/radvd.conf => /etc/radvd.conf.raspion
-
-
+#template for replacing other packages config
+configs/etc.templates/* /usr/share/raspion/etc.templates

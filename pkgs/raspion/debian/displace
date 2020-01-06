@@ -1,8 +1,0 @@
-/etc/ntopng/ntopng.conf.raspion
-/etc/sysctl.d/ipforward.conf.raspion
-/etc//hostname.raspion
-/etc/gtk-3.0/settings.ini.raspion
-/etc/default/shellinabox.raspion
-/etc/network/interfaces.raspion
-/etc/hostapd/hostapd.conf.raspion
-/etc/radvd.conf.raspion

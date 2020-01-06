@@ -17,6 +17,24 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+# source default pkg values
+. /usr/share/raspion/etc.templates/default.conf
+
+apply_etctemplate() {
+    local CONF=$1
+    local NAME=$(basename $CONF)
+    [[ -f /usr/share/raspion/etc.templates/$NAME ]] || return 1
+    cp /usr/share/raspion/etc.templates/$NAME $CONF
+    #manual sed chaos - replace global
+    sed -i "s/#IPv6HOST#/$IPV6HOST/g" $CONF
+    sed -i "s/#IPv6NET#/$IPV6NET/g" $CONF
+    sed -i "s/#Pv4HOST#/$IPV4HOST/g" $CONF
+    sed -i "s/#IPv4NET#/$IPV4NET/g" $CONF
+    sed -i "s/#DHCPv4START#/$DHCPv4START/g" $CONF
+    sed -i "s/#DHCPv4END#/$DHCPv4END/g" $CONF
+    sed -i "s/#SSID#/$SSID/g" $CONF
+    return 0
+}
 
 case "$1" in
     configure)
@@ -25,20 +43,30 @@ case "$1" in
     usermod -a -G www-data pi
     
     #add iptable rules
-    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE 
-    ip6tables -t nat -A POSTROUTING -o eth0 -s #IPv6NET#/64 -j MASQUERADE 
-    iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 
+    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    ip6tables -t nat -A POSTROUTING -o eth0 -s $IPV6NET/64 -j MASQUERADE 
+    iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0
     ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 
     #save policys
     netfilter-persistent save
 
-    #generate hostapd pw
-    
+    #modify & place etc.templates
+    apply_etctemplate "/etc/ntopng/ntopng.conf"
+    apply_etctemplate "/etc/gtk-3.0/settings.ini"
+    apply_etctemplate "/etc/default/shellinabox"
+    apply_etctemplate "/etc/network/interfaces"
+    apply_etctemplate "/etc/hostapd/hostapd.conf"
+    apply_etctemplate "/etc/radvd.conf"
+
+    #generate hostapd pw and append to conf
     WPAPW=$(pwgen --ambiguous 9) 
     echo "wpa_passphrase=$WPAPW" >> /etc/hostapd/hostapd.conf.raspion
     echo "The hostapd Password ist: $WPAPW"
-
-
+    
+    #change hostname to raspion
+    sed -i "s/^.*127.0.1.1*/127.0.1.1   raspion/" /etc/hosts
+    echo "raspion" > /etc/hostname
+    
     #unmask hostapd and enable radvd
     systemctl unmask hostapd
     systemctl enable radvd
@@ -52,6 +80,7 @@ case "$1" in
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
+    echo "something really bad happend\n - take a break\n - save modified confs\n - and rerun configuration"
     ;;
 
     *)
