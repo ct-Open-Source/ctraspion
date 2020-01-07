@@ -1,8 +1,8 @@
 # c't-Raspion
 
-<img src="files/logo.png" alt="drawing" width="100" align="right">Turns a Raspberry Pi into a WLAN router to take a look at network traffic of smart home and IoT devices. All apps are reachable by a web browser. Published by [german computer magazine c't](https://ct.de/).
+<img src="files/logo.png" alt="c't Raspion Logo" width="100" align="right">Turns a Raspberry Pi into a WLAN router to take a look at network traffic of smart home and IoT devices. All apps are reachable via web browser. Published by [german computer magazine c't](https://ct.de/).
 
-Its initial releases incorporated [Pi-hole](https://pi-hole.net/), [ntopng](https://www.ntop.org/products/traffic-analysis/ntop/), [Wireshark](https://www.wireshark.org/), [Shell In A Box](https://github.com/shellinabox/shellinabox) and [mitmproxy](https://mitmproxy.org/).
+Its initial release incorporates [Pi-hole](https://pi-hole.net/), [ntopng](https://www.ntop.org/products/traffic-analysis/ntop/), [Wireshark](https://www.wireshark.org/), [Shell In A Box](https://github.com/shellinabox/shellinabox) and [mitmproxy](https://mitmproxy.org/).
 
 ## Requirements
 
@@ -19,7 +19,7 @@ cd raspion
 ./install.sh
 ```
 
-[Manual download of Zip-Archiv](https://ct.de/projekte/ctraspion/raspion.zip)
+[Manual download of the zip archive](https://ct.de/projekte/ctraspion/raspion.zip)
 
 ## Further reading
 
