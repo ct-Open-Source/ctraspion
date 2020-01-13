@@ -1,25 +1,37 @@
 #!/bin/bash
-
-#
+###
 # c't-Raspion, a Raspberry Pi based all in one sniffer
 # for judging on IoT and smart home devices activity
 # (c) 2019-2020 c't magazin, Germany, Hannover
 # see: https://ct.de/-123456 for more information
 # 
+# file          : release/install.sh
+# description   : main installer for raspion
+#               : based on the work of P.Siering<ps@ct.de>
+# version       : 0.1
+#       
+# changes         
+# author		: Benny Stark - github.com/Diggen85
+# date          : 2020013
+# notes         : Initial - untested
+###
 
 set -e
 
-WD=$(pwd)
-LOG=./raspion-devinst.log
-source ./config.sh
+#
+${$RELEASE:=TRUE}
+#Replace Debs / add local repository when FALSE
 
+WD=$(pwd)
+LOG=./raspion-inst.log
 sudo touch $LOG
 sudo chown pi:pi $LOG
 
-trap 'error_report $LINENO' ERR
+
 error_report() {
     echo "Installation leider fehlgeschlagen in Zeile $1."
 }
+trap 'error_report $LINENO' ERR
 
 
 echo "==> Einrichtung des c't-Raspion ($VER)" | tee -a $LOG
@@ -48,22 +60,9 @@ sudo cp files/timezone /etc >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive tzdata >> $LOG 2>&1
 
 
-
 echo "* Pakete vorkonfigurieren ..." | tee -a $LOG
 sudo debconf-set-selections debconf/wireshark >> $LOG 2>&1
 sudo debconf-set-selections debconf/iptables-persistent >> $LOG 2>&1
-
-echo "* lokale Pakete erstellen ..." | tee -a $LOG
-cd pkgs/raspion
-dpkg-buildpackage -uc -us | tee -a $LOG
-
-
-echo "* lokale Pakete installieren ..." | tee -a $LOG
-##sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $LOG 2>&1
-
-#DEV 
-exit 1337
-
 
 echo "* Pi-hole installieren ..." | tee -a $LOG
 if ! id pihole >/dev/null 2>&1; then
