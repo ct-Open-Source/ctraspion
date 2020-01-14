@@ -15,6 +15,9 @@
 # author		: Benny Stark - github.com/Diggen85
 # date          : 2020011
 # notes         : Initial - untested
+# date          : 2020014
+# notes         : runs and builds 
+#               : install and builded Package not tested
 ###
 
 
@@ -25,15 +28,21 @@ RSD_CWD=$(pwd)
 RSD_ARGS=$@
 RSD_USER=$EUID
 RSD_ARCH=$(dpkg --print-architecture)
-RSD_REQPACKAGES="build-essentials debhelper dh-make quilt fakeroot lintian devscripts config-package-dev"
+RSD_REQPACKAGES="build-essential debhelper dh-make quilt fakeroot lintian devscripts config-package-dev"
+
+DEBFULLNAME="RSD Script"
+DEBEMAIL="pi@raspberry"
+
+DCH_DISTRIBUTION=raspion
+DCH_CHANGELOG="Initial RSD Build"
 
 source scripts/functions.sh
 
 #check for armhf
-if [ "$RSD_ARCH" != "armhf" ] ; then {
+if [ "$RSD_ARCH" != "armhf" ] ; then 
     logger "No armhf-Arch - crossbuilding is actually not supported" "ERR"
     exit 1
-}
+fi
 
 #check args
     #print out scripts/commands

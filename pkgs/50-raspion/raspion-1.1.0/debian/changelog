@@ -1,5 +1,6 @@
-raspion (1.1.0+dev) unstable; urgency=medium
+raspion (1.1.0~rsd1) raspion; urgency=medium
 
-  * Development Release
+  * Initial Development Release
+  * Based on work from Peter Siering <ps@ct.de> Wed, 12 Dec 2019 17:00:00 +0100
 
- -- Peter Siering <ps@ct.de>  Wed, 12 Dec 2019 17:00:00 +0100
+ -- Benny Stark <Benny_Stark@live.de>  Tue, 14 Jan 2020 20:00:00 +0100

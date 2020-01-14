@@ -14,17 +14,20 @@
 # date          : 2020010
 # notes         : Initial - untested
 #               : needs version-infos and increment
+# date          : 2020014
+# notes         : runs and builds
 ###
 
-source scripts/functions.sh
-
+set -e
 
 #change to buildir and build
-cd pkgs/50-raspion/raspion-1.1.0-RSD
-runPriv apt-get build-dep
-dch -i
+cd ${PKG_PATH}/raspion-1.1.0
+
+runPriv apt-get build-dep .
+dch --force-distribution --distribution $DCH_DISTRIBUTION --rebuild "$DCH_CHANGELOG"
+
 dpkg-buildpackage -uc -us
 
 #Copy alle files
-mv 50-raspion/*.deb 50-raspion/*.dsc 50-raspion/*.tar.gz 50-raspion/*.changes development/repository/
+mv ${PKG_PATH}*.deb ${PKG_PATH}*.dsc ${PKG_PATH}*.tar.xz ${PKG_PATH}*.changes $RSD_CWD/development/repository/
 

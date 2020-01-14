@@ -7,16 +7,16 @@ html/* home/pi/public_html
 scripts/* usr/local/sbin
 
 # Addional conf for other packages - this are for our conffile
-files/raspion-sudo /etc/sudoers.d
-files/99-raspion_ipforward.conf /etc/sysctl.d
-files/prefix_delegation /etc/dhcp/dhclient-exit-hooks.d
-files/10-dir-listing.conf /etc/lighttpd/conf-available
-files/20-extport.conf /etc/lighttpd/conf-available
+configs/raspion-sudo /etc/sudoers.d
+configs/99-raspion_ipforward.conf /etc/sysctl.d
+configs/prefix_delegation /etc/dhcp/dhclient-exit-hooks.d
+configs/10-dir-listing.conf /etc/lighttpd/conf-available
+configs/20-extport.conf /etc/lighttpd/conf-available
 
 #conf in user dirs
-files/config.yaml /root/.mitmproxy
-files/recent /home/pi/.config/wireshark
-files/preferences_wireshark => /home/pi/.config/wireshark/preferences
+configs/config.yaml /root/.mitmproxy
+configs/recent /home/pi/.config/wireshark
+configs/preferences_wireshark => /home/pi/.config/wireshark/preferences
 
 #template for replacing other packages config
 configs/etc.templates/* /usr/share/raspion/etc.templates
