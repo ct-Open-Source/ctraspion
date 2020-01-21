@@ -1,4 +1,5 @@
 # TODO
+
 - debian/rules
     - depencies ok ?
     - ~~clean should disable cutomizations~~
@@ -13,12 +14,12 @@
     - split in Easy and Expert?
 - Move Files from public_html to /var/www
 - Split pkg raspion in data(www) && conf ???
-- version-number automation ???
+- ~~version-number automation ???~~
 - use hostnamectl???
 - ~~mv customize.sh to raspion/debian/~~
     - ~~maybe use transform?~~
     - ~~source config.sh from another place~~
-- split install-dev into build-pkg and modify system
+- ~~split install-dev into build-pkg and modify system~~
     - better way for modify system / use raspi-config???
 - add proper pre/postrm
     - save changes in postinst

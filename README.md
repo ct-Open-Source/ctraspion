@@ -7,12 +7,31 @@ Its initial releases incorporated [Pi-hole](https://pi-hole.net/), [ntopng](http
 ## Changelog
 See [CHANGELOG.md](CHANGELOG.md) for details
 
- - Initial commit
- - modification in progress to build and install raspion as package
-
 ## Requirements
 
 Use a Raspberry Pi 3 or 4 for decent performance. Wireshark(-gtk) will be displayed by [Broadwayd](https://developer.gnome.org/gtk3/stable/broadwayd.html) within a web browser window.
+
+## Usage
+
+git clone --branch feature-debbaseddev https://github.com/ct-Open-Source/ctraspion.git
+cd ctraspion/
+./rsd.sh all
+
+These will run the following:
+ - ./rsd.sh prepare - Installs Depencies for building raspion
+ - ./rsd.sh build - Builds packages under pkg/
+ - ./rsd.sh buildrepository - Builds and setup the local apt-repository
+ - ./rsd.sh install - just runs release/install.sh
+
+## Structure
+ - development/ - contains the patches from c't-Magazine and the repository
+ - development/repository/ - flat local apt repository 
+ - pkgs/ - contains subdirectorys for each package (actually only raspion)
+ - pkgs/[pkg]/build.sh - will be sourced from rsd.sh and should build a deb-file, which mzust be moved to development/repository
+ - release/ - contains org debs and all files needed for the installation
+ - scripts/ - functions to be sourced from rsd.sh
+ - rsd.sh - main buildscript
+
 
 ### Articles in c't (German)
 

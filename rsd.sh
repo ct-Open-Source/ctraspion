@@ -28,12 +28,13 @@ RSD_CWD=$(pwd)
 RSD_ARGS=$@
 RSD_USER=$EUID
 RSD_ARCH=$(dpkg --print-architecture)
+RSD_DIST="raspion"
+RSD_REPO="development/repository"
 RSD_REQPACKAGES="build-essential debhelper dh-make quilt fakeroot lintian devscripts config-package-dev"
 
 DEBFULLNAME="RSD Script"
 DEBEMAIL="pi@raspberry"
 
-DCH_DISTRIBUTION=raspion
 DCH_CHANGELOG="Initial RSD Build"
 
 source scripts/functions.sh
@@ -44,9 +45,7 @@ if [ "$RSD_ARCH" != "armhf" ] ; then
     exit 1
 fi
 
-#check args
-    #print out scripts/commands
-    #run arg
+#TODO check args
 case $1 in 
     prepare)
         RSD-Prepare
@@ -54,12 +53,26 @@ case $1 in
     build)
         RSD-Build $2
     ;;
+        buildrepository)
+	    RSD-BuildRepository
+    ;;
     install)
         RSD-Install
     ;;
+    all)
+	    RSD-Prepare
+	    RSD-Build
+	    RSD-BuildRepository
+	    RSD-Install
+	;;
     help|*)
-     echo "HELP ME"
-    ;;
+        echo "rsd.sh - Spy-Academy for c't raspion"
+        echo "./rsd.sh all - Executes all options below"
+        echo "./rsd.sh prepare - Installs Depencies for building raspion"
+        echo "./rsd.sh build - Builds packages under pkg/"
+        echo "./rsd.sh buildrepository - Builds and setup the local apt-repository"
+        echo "./rsd.sh install - just runs release/install.sh"
+        ;;
 esac
 
 
