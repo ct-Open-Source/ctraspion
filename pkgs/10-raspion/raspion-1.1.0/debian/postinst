@@ -46,7 +46,7 @@ apply_etctemplate() {
     local CONF_NAME=$(basename $1)
     local SED_SCRIPT="s/#IPV6HOST#/$IPV6HOST/g;\
         s/#IPV6NET#/$IPV6NET/g;\
-        s/#PV4HOST#/$IPV4HOST/g;\
+        s/#IPV4HOST#/$IPV4HOST/g;\
         s/#IPV4NET#/$IPV4NET/g;\
         s/#DHCPV4START#/$DHCPv4START/g;\
         s/#DHCPV4END#/$DHCPv4END/g;\
@@ -95,7 +95,6 @@ case "$1" in
         
         # Enable lighthttpd config
         ln -sf /etc/lighttpd/conf-available/20-extport.conf /etc/lighttpd/conf-enabled/20-extport.conf
-        systemctl restart lighthttpd
 
         #generate hostapd pw and append to conf
         WPAPW=$(pwgen --ambiguous 9) 
@@ -120,16 +119,25 @@ case "$1" in
         chmod g+s /home/pi/public_html/caps
         chmod 777 /home/pi/public_html/caps
         chgrp www-data /home/pi/public_html/caps
+
+        #set shellscript permissions in /usr/local/sbin
+        chmod 755 /usr/local/sbin/contcap.sh
+        chmod 755 /usr/local/sbin/mitmoff.sh
+        chmod 755 /usr/local/sbin/mitmon.sh
+        chmod 755 /usr/local/sbin/mitmstat.sh
+        chmod 755 /usr/local/sbin/mitmweb.sh
+        chmod 755 /usr/local/sbin/scan.sh
+        chmod 755 /usr/local/sbin/scanvul.sh
         ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
         echo "something bad happend\n - take a break\n - better check confs and rerun configuration"
-    ;;
+        ;;
 
     *)
         echo "postinst called with unknown argument \`$1'" >&2
         exit 1
-    ;;
+        ;;
 esac
 
 # dh_installdeb will replace this with shell code automatically

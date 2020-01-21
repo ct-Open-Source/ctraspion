@@ -1,6 +1,6 @@
 /etc/lighttpd/conf-available/10-proxy.conf /etc/lighttpd/conf-enabled/10-proxy.conf
 
-/etc/lighttpd/conf-available/10-raspion-dir-listing.conf /etc/lighttpd/conf-enabled/10-raspion-dir-listing.conf
+/etc/lighttpd/conf-available/10-dir-listing-raspion.conf /etc/lighttpd/conf-enabled/10-dir-listing-raspion.conf
 /etc/lighttpd/conf-available/10-userdir.conf /etc/lighttpd/conf-enabled/10-userdir.conf
 
 /usr/share/fonts-font-awesome usr/lib/python3/dist-packages/mitmproxy/addons/onboardingapp/static/fontawesome

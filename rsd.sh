@@ -27,10 +27,13 @@ RSD_VER=0.1.0
 RSD_CWD=$(pwd)
 RSD_ARGS=$@
 RSD_USER=$EUID
+
 RSD_ARCH=$(dpkg --print-architecture)
 RSD_DIST="raspion"
 RSD_REPO="development/repository"
+
 RSD_REQPACKAGES="build-essential debhelper dh-make quilt fakeroot lintian devscripts config-package-dev"
+RSD_APTARGS="--no-install-recommends -y"
 
 DEBFULLNAME="RSD Script"
 DEBEMAIL="pi@raspberry"

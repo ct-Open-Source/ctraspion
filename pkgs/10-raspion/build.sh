@@ -27,7 +27,7 @@ set -e
 cd ${PKG_PATH}/raspion-1.1.0
 
 logger "install build-dep"
-runPriv apt-get build-dep .
+runPriv apt-get  ${RSD_APTARGS} build-dep .
 
 logger "change version"
 dch --force-distribution --distribution $RSD_DIST  --rebuild "$DCH_CHANGELOG"

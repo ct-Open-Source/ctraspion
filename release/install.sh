@@ -38,6 +38,16 @@ sudo dpkg -i $WD/debs/apt-ntop_1.0.190416-469_all.deb  >> $LOG 2>&1
 # the former calls apt-get update in postinst
 
 echo "* Raspbian aktualisieren ..." | tee -a $LOG
+#BUGFIX: For failed install if kernel upgrades -> iptables wont find his modules - BST20200121
+if  LC_ALL=C sudo apt-get --just-print upgrade | grep -xiq "raspberrypi-kernel"; then
+        echo "  Beim aktualisieren wird der raspberrypi-kernel aktualisiert."
+        echo "  Nach der Aktualisierung wird ein neustart benötigt"
+        echo "  Bitte starten Sie die Installation dannach erneut."
+        read -p " Zum fortfahren bitte eine Taste drücken."
+        sudo apt-get -y --allow-downgrades dist-upgrade >> $LOG 2>&1
+        sudo reboot
+fi
+
 sudo apt-get -y --allow-downgrades dist-upgrade >> $LOG 2>&1
 
 echo "* Raspbian Sprachanpassungen ..." | tee -a $LOG
@@ -76,8 +86,8 @@ if ! id pihole >/dev/null 2>&1; then
 fi
 sudo mkdir -p /etc/pihole >> $LOG 2>&1
 sudo chown pihole:pihole /etc/pihole >> $LOG 2>&1
-sudo cp $WD/release/pihole/setupVars.conf /etc/pihole >> $LOG 2>&1
-sudo sed -i "s/IPV4_ADDRESS=#IPV4HOST#/IPV4_ADDRESS4HOST#/IPV4_ADDRESS=$IPV4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo cp $WD/pihole/setupVars.conf /etc/pihole >> $LOG 2>&1
+sudo sed -i "s/IPV4_ADDRESS=#IPV4HOST#/IPV4_ADDRESS=$IPV4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
 sudo sed -i "s/IPV6_ADDRESS=#IPV6HOST#/IPV6_ADDRESS=$IPV6HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
 sudo sed -i "s/DHCP_ROUTER=#IPV4HOST#/DHCP_ROUTER=$IPV4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
 sudo sed -i "s/DHCP_START=#DHCPV4START#/DHCP_START=$DHCPV4START/" /etc/pihole/setupVars.conf >> $LOG 2>&1
@@ -86,12 +96,12 @@ sudo -s <<HERE
 curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended >> $LOG 2>&1
 HERE
 sudo chattr -f -i /etc/init.d/pihole-FTL >> $LOG 2>&1
-sudo cp $WD/release/pihole/pihole-FTL /etc/init.d/ >> $LOG 2>&1
+sudo cp $WD/pihole/pihole-FTL /etc/init.d/ >> $LOG 2>&1
 sudo chattr -f +i /etc/init.d/pihole-FTL >> $LOG 2>&1
 sudo systemctl daemon-reload >> $LOG 2>&1
 sudo systemctl restart pihole-FTL >> $LOG 2>&1
 sudo pihole -f restartdns >> $LOG 2>&1
-sudo cp $WD/files/hosts /etc/ >> $LOG 2>&1
+
 
 #im Log nach dem hostapd Passwort suchen
 WPAPW=$(cat $LOG | grep "The hostapd Password is: "| cut -d":" -f2)

@@ -91,7 +91,7 @@ buildChecksum() {
 ## - needs to be root or sudo
 RSD-Prepare() {
 	logger "install packages needed for building raspion"
-    runPriv sudo apt-get install $RSD_REQPACKAGES
+    runPriv sudo apt-get install ${RSD_APTARGS} ${RSD_REQPACKAGES}
 }
 
 ##
@@ -203,16 +203,12 @@ EOF
     #if not exists add repository and preference to apt 
     if [[ ! -f /etc/apt/sources.list.d/rsd.list ]]; then
     logger "Add repository to apt"
-    echo "deb [trusted=yes allow-downgrade-to-insecure=yes allow-insecure=yes] file://${RSD_CWD}/${RSD_REPO} ./" | sudo tee /etc/apt/sources.list.d/rsd.list
+    echo "deb [trusted=yes allow-downgrade-to-insecure=yes allow-insecure=yes] file://${RSD_CWD}/${RSD_REPO} ./" | runPriv tee /etc/apt/sources.list.d/rsd.list
     fi
     #TODO Use Template
     if [[ ! -f /etc/apt/preferences.d/50rsd ]]; then
     logger "Add preferences to apt"
-    cat > /etc/apt/preferences.d/50rsd << EOF
-Package: *
-Pin: release o=ct,a=unstable,l=raspion
-Pin-Priority: 610
-EOF
+    echo -e "Package: *\nPin: release o=ct,a=unstable,l=raspion\nPin-Priority: 610\n" | runPriv tee /etc/apt/preferences.d/50rsd
     fi
 
     logger "Update apt"
