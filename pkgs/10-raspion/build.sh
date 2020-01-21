@@ -5,7 +5,7 @@
 # (c) 2019-2020 c't magazin, Germany, Hannover
 # see: https://ct.de/-123456 for more information
 # 
-# file          : pkgs/50-raspion.sh
+# file          : pkgs/10-raspion.sh
 # description   : build the main package - raspion.deb
 # version       : 0.1
 #       
@@ -16,6 +16,9 @@
 #               : needs version-infos and increment
 # date          : 2020014
 # notes         : runs and builds
+# date          : 20200120
+# notes         : add logger
+#               : outsource code to functions
 ###
 
 set -e
@@ -23,11 +26,18 @@ set -e
 #change to buildir and build
 cd ${PKG_PATH}/raspion-1.1.0
 
+logger "install build-dep"
 runPriv apt-get build-dep .
-dch --force-distribution --distribution $DCH_DISTRIBUTION --rebuild "$DCH_CHANGELOG"
 
+logger "change version"
+dch --force-distribution --distribution $RSD_DIST  --rebuild "$DCH_CHANGELOG"
 dpkg-buildpackage -uc -us
 
-#Copy alle files
-mv ${PKG_PATH}*.deb ${PKG_PATH}*.dsc ${PKG_PATH}*.tar.xz ${PKG_PATH}*.changes $RSD_CWD/development/repository/
+#Add Files to Repro
+logger "add packages to repository"
+addToRepo ${PKG_PATH}*.deb
+
+#clean
+#TODO add src Repo
+rm ${PKG_PATH}*deb ${PKG_PATH}*dsc ${PKG_PATH}*tar.* ${PKG_PATH}*changes ${PKG_PATH}*buildinfo	
 

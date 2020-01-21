@@ -35,6 +35,7 @@ RSD_REQPACKAGES="build-essential debhelper dh-make quilt fakeroot lintian devscr
 DEBFULLNAME="RSD Script"
 DEBEMAIL="pi@raspberry"
 
+# Comments for builded Debian Packages
 DCH_CHANGELOG="Initial RSD Build"
 
 source scripts/functions.sh

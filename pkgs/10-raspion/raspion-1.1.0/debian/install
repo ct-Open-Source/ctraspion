@@ -1,22 +1,23 @@
 #!/usr/bin/dh-exec --with=install
 
-#Webfrontend Files
+# Webfrontend Files
 html/* home/pi/public_html
 
-#Scripts for executing Webfrontend
+# Scripts for executing Webfrontend
 scripts/* usr/local/sbin
 
 # Addional conf for other packages - this are for our conffile
 configs/raspion-sudo /etc/sudoers.d
 configs/99-raspion_ipforward.conf /etc/sysctl.d
 configs/prefix_delegation /etc/dhcp/dhclient-exit-hooks.d
-configs/10-dir-listing.conf /etc/lighttpd/conf-available
-configs/20-extport.conf /etc/lighttpd/conf-available
+configs/10-dir-listing-raspion.conf /etc/lighttpd/conf-available
 
-#conf in user dirs
+# conf in user dirs - chmod in postinst
 configs/config.yaml /root/.mitmproxy
 configs/recent /home/pi/.config/wireshark
+
+#TODO this is the last which require dh-exec
 configs/preferences_wireshark => /home/pi/.config/wireshark/preferences
 
-#template for replacing other packages config
+# template for replacing other packages config
 configs/etc.templates/* /usr/share/raspion/etc.templates

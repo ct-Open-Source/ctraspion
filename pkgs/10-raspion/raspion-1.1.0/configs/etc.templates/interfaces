@@ -1,13 +1,13 @@
 auto br0
 iface br0 inet static
   bridge_ports wlan0 eth1
-  address #IPv4HOST#
+  address #IPV4HOST#
   netmask 255.255.255.0
 
 #iface br0 inet6 manual
 
 iface br0 inet6 static
-  address #IPv6HOST#
+  address #IPV6HOST#
   netmask 64
 
 allow-hotplug eth0
