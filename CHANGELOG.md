@@ -8,3 +8,7 @@
  05.01.2020 - [Benny Stark](https://github.com/Diggen85)
  - create (auto)build environment for dev
  - incomplete overall install!!! - raspion.deb builds
+ 
+ 21.01.2020 - [Benny Stark](https://github.com/Diggen85)
+ - lots of Bugfixing
+ - but the Buildscript should build and install now 
