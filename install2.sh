@@ -5,7 +5,7 @@
 # for judging on IoT and smart home devices activity
 # (c) 2019-2020 c't magazin, Germany, Hannover
 # see: https://ct.de/-123456 for more information
-# 
+#
 
 set -e
 
@@ -28,6 +28,24 @@ sudo dpkg -i $WD/debs/raspion-keyring_2019_all.deb  >> $LOG 2>&1
 sudo dpkg -i $WD/debs/apt-ntop_1.0.190416-469_all.deb  >> $LOG 2>&1
 # the former calls apt-get update in postinst
 
+echo "* Firewallregeln vorbereiten, Module laden" | tee -a $LOG
+sudo iptables -t nat -F POSTROUTING >> $LOG 2>&1
+sudo ip6tables -t nat -F POSTROUTING >> $LOG 2>&1
+sudo iptables -t nat -F PREROUTING >> $LOG 2>&1
+sudo ip6tables -t nat -F PREROUTING >> $LOG 2>&1
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE >> $LOG 2>&1
+sudo ip6tables -t nat -A POSTROUTING -o eth0 -s $IPv6NET/64 -j MASQUERADE >> $LOG 2>&1
+sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
+sudo ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
+
+echo "* Pakete vorkonfigurieren ..." | tee -a $LOG
+sudo debconf-set-selections debconf/wireshark >> $LOG 2>&1
+sudo debconf-set-selections debconf/iptables-persistent >> $LOG 2>&1
+sudo apt-get install -y iptables-persistent >> $LOG 2>&1
+
+echo "* Firewall-Regeln speichern ..." | tee -a $LOG
+sudo netfilter-persistent save >> $LOG 2>&1
+
 echo "* Raspbian aktualisieren ..." | tee -a $LOG
 sudo apt-get -y --allow-downgrades dist-upgrade >> $LOG 2>&1
 
@@ -45,10 +63,6 @@ sudo debconf-set-selections debconf/tzdata >> $LOG 2>&1
 sudo ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime >> $LOG 2>&1
 sudo cp files/timezone /etc >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive tzdata >> $LOG 2>&1
-
-echo "* Pakete vorkonfigurieren ..." | tee -a $LOG
-sudo debconf-set-selections debconf/wireshark >> $LOG 2>&1
-sudo debconf-set-selections debconf/iptables-persistent >> $LOG 2>&1
 
 echo "* Pakete installieren ..." | tee -a $LOG
 sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $LOG 2>&1
@@ -81,13 +95,6 @@ PW=$(pwgen --ambiguous 9)
 sudo -s <<HERE
 echo "wpa_passphrase=$PW" >> /etc/hostapd/hostapd.conf
 HERE
-
-echo "* Firewall-Regeln setzen und speichern ..." | tee -a $LOG
-sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE >> $LOG 2>&1
-sudo ip6tables -t nat -A POSTROUTING -o eth0 -s $IPv6NET/64 -j MASQUERADE >> $LOG 2>&1
-sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
-sudo ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
-sudo netfilter-persistent save >> $LOG 2>&1
 
 echo "* systemd-Units vorbereiten ..." | tee -a $LOG
 sudo systemctl enable mitmweb.service >> $LOG 2>&1
