@@ -11,6 +11,7 @@ set -e
 
 WD=$(pwd)
 LOG=/var/log/raspion.log
+NEWLANG=de_DE.UTF-8
 source ./.version
 sudo touch $LOG
 sudo chown pi:pi $LOG
@@ -31,8 +32,7 @@ sudo debconf-set-selections debconf/keyboard-configuration >> $LOG 2>&1
 sudo cp files/keyboard /etc/default >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive keyboard-configuration >> $LOG 2>&1
 
-NEWLANG=de_DE.UTF-8
-sudo cp files/locale.gen /etc >> $LOG 2>&1
+sudo sed -e "/^[# ]*$NEWLANG/s/^[# ]*//" /etc/locale.gen  >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive locales >> $LOG 2>&1
 sudo update-locale LANG=$NEWLANG >> $LOG 2>&1
 
