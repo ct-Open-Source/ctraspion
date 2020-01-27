@@ -138,6 +138,10 @@ RSD-Build() {
 ## RSD-Install
 ## - Calls install.sh with dev dependend args
 RSD-Install() {
+    logger "Set actual GIT Version, as Raspion-Verison"
+    local ver=$(git rev-parse --short HEAD)
+    logger "Version: $ver" "nor"
+    echo "VER=$ver" > release/.version
     logger "Start the Raspion installation"
     cd $RSD_CWD/release/
     ./install.sh
