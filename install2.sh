@@ -11,7 +11,7 @@ set -e
 
 WD=$(pwd)
 LOG=/var/log/raspion.log
-source ./.version
+[[ -f .version ]] && source ./.version || VER=$(git rev-parse --short HEAD)
 source ./.defaults
 sudo touch $LOG
 sudo chown pi:pi $LOG
