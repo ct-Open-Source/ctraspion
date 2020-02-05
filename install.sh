@@ -12,7 +12,7 @@ set -e
 WD=$(pwd)
 LOG=/var/log/raspion.log
 NEWLANG=de_DE.UTF-8
-source ./.version
+[[ -f .version ]] && source ./.version || VER=$(git rev-parse --short HEAD)
 sudo touch $LOG
 sudo chown pi:pi $LOG
 
