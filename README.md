@@ -16,7 +16,7 @@ Install as user pi on a fresh Rasbian Buster image (lite prefered) via:
 wget ct.de/s/x5Pm -O raspion.zip 
 unzip raspion.zip
 cd raspion
-./install.sh
+./install2.sh
 ```
 
 [Manual download of the zip archive](https://ct.de/projekte/ctraspion/raspion.zip)
