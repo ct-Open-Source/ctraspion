@@ -27,6 +27,6 @@ cd raspion
 
 In c't 1/2020:
 
-[c’t-Raspion: Datenpetzen finden und bändigen](https://ct.de/-2805710)
+[c’t-Raspion: Datenpetzen finden und bändigen](https://www.heise.de/ct/ausgabe/2020-1-c-t-Raspion-Datenpetzen-finden-und-baendigen-4611153.html)
 
 [c't-Raspion: Projektseite – Foren weitere Hinweise](https://www.heise.de/ct/artikel/c-t-Raspion-Projektseite-4606645.html)
