@@ -55,7 +55,7 @@ sudo debconf-set-selections debconf/keyboard-configuration >> $LOG 2>&1
 sudo cp files/keyboard /etc/default >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive keyboard-configuration >> $LOG 2>&1
 
-sudo sed -e "/^[# ]*$NEWLANG/s/^[# ]*//" /etc/locale.gen  >> $LOG 2>&1
+sudo sed -i -e "/^[# ]*$NEWLANG/s/^[# ]*//" /etc/locale.gen  >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive locales >> $LOG 2>&1
 sudo update-locale LANG=$NEWLANG >> $LOG 2>&1
 
