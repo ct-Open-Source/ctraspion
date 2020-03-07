@@ -1,3 +1,22 @@
 #ignore vscode
 .vscode
 ctraspion.code-workspace
+#buildrepository added
+development/repository
+
+#build added
+pkgs/10-raspion/raspion-1.1.0/debian/.debhelper
+pkgs/10-raspion/raspion-1.1.0/debian/raspion
+pkgs/10-raspion/raspion-1.1.0/debian/tmp
+pkgs/10-raspion/raspion-1.1.0/debian/debhelper-build-stamp
+pkgs/10-raspion/raspion-1.1.0/debian/files
+pkgs/10-raspion/raspion-1.1.0/debian/raspion.debhelper.log
+pkgs/10-raspion/raspion-1.1.0/debian/raspion.postrm.debhelper
+pkgs/10-raspion/raspion-1.1.0/debian/raspion.substvars
+#install added
+release/raspion-inst.log
+
+#is modified each build, ignore for now
+pkgs/10-raspion/raspion-1.1.0/debian/changelog
+#is modified each install.sh run, ignore for now
+release/.version
