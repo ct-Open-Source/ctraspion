@@ -34,6 +34,9 @@ trap 'error_report $LINENO' ERR
 
 echo "==> Einrichtung des c't-Raspion ($VER)" | tee -a $LOG
 
+echo "* Wifi einschalten" | tee -a $LOG
+rfkill unblock wifi >> $LOG 2>&1
+
 echo "* Hilfspakete hinzufügen, Paketlisten aktualisieren" | tee -a $LOG
 sudo dpkg -i $WD/debs/raspion-keyring_2019_all.deb  >> $LOG 2>&1
 sudo dpkg -i $WD/debs/apt-ntop_1.0.190416-469_all.deb  >> $LOG 2>&1
