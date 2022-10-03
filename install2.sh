@@ -3,8 +3,8 @@
 #
 # c't-Raspion, a Raspberry Pi based all in one sniffer
 # for judging on IoT and smart home devices activity
-# (c) 2019-2020 c't magazin, Germany, Hannover
-# see: https://ct.de/-123456 for more information
+# (c) 2019-2022 c't magazin, Germany, Hannover
+# see: https://ct.de/-4606645 for more information
 #
 
 set -e
@@ -23,13 +23,25 @@ error_report() {
 }
 
 echo "==> Einrichtung des c't-Raspion ($VER)" | tee -a $LOG
+source /etc/os-release
+if [ "$VERSION_ID" != "10" ]; then
+  echo "Sorry, Installation funktioniert nur auf Pi OS Legacy (Buster, Version 10)"
+  exit 0
+fi
+
 echo "* Wifi einschalten" | tee -a $LOG
 rfkill unblock wifi >> $LOG 2>&1
 
 echo "* Hilfspakete hinzufügen, Paketlisten aktualisieren" | tee -a $LOG
 sudo dpkg -i $WD/debs/raspion-keyring_2019_all.deb  >> $LOG 2>&1
-sudo dpkg -i $WD/debs/apt-ntop_1.0.190416-469_all.deb  >> $LOG 2>&1
-# the former calls apt-get update in postinst
+# dont' install expired apt-ntop_1.0.190416-469_all.deb from debs dir
+# fast fix: download and install a fresh one:
+pushd /tmp >> $LOG 2>&1
+wget https://packages.ntop.org/RaspberryPI/apt-ntop.deb >> $LOG 2>&1
+sudo dpkg -i apt-ntop.deb >> $LOG 2>&1
+popd >> $LOG 2>&1
+sudo apt-get update >> $LOG 2>&1
+# the former called apt-get update in postinst
 
 echo "* Firewallregeln vorbereiten, Module laden" | tee -a $LOG
 sudo iptables -t nat -F POSTROUTING >> $LOG 2>&1
@@ -49,10 +61,10 @@ sudo apt-get install -y iptables-persistent >> $LOG 2>&1
 echo "* Firewall-Regeln speichern ..." | tee -a $LOG
 sudo netfilter-persistent save >> $LOG 2>&1
 
-echo "* Raspbian aktualisieren ..." | tee -a $LOG
+echo "* Pi OS aktualisieren ..." | tee -a $LOG
 sudo apt-get -y --allow-downgrades dist-upgrade >> $LOG 2>&1
 
-echo "* Raspbian Sprachanpassungen ..." | tee -a $LOG
+echo "* Pi OS Sprachanpassungen ..." | tee -a $LOG
 sudo debconf-set-selections debconf/keyboard-configuration >> $LOG 2>&1
 sudo cp files/keyboard /etc/default >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive keyboard-configuration >> $LOG 2>&1
@@ -72,8 +84,8 @@ sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $L
 echo "* Softwaregrundkonfiguration ..." | tee -a $LOG
 sudo usermod -a -G wireshark pi >> $LOG 2>&1
 sudo usermod -a -G www-data pi >> $LOG 2>&1
-sudo cp $WD/files/ntopng.conf /etc/ntopng >> $LOG 2>&1
-sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng/ntopng.conf >> $LOG 2>&1
+sudo cp $WD/files/ntopng.conf /etc/ >> $LOG 2>&1
+sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng.conf >> $LOG 2>&1
 sudo cp $WD/files/interfaces /etc/network >> $LOG 2>&1
 sudo sed -i "s/^  address #IPv4HOST#/  address $IPv4HOST/" /etc/network/interfaces >> $LOG 2>&1
 sudo sed -i "s/^  address #IPv6HOST#/  address $IPv6HOST/" /etc/network/interfaces >> $LOG 2>&1
