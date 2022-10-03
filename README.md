@@ -10,7 +10,7 @@ Use a Raspberry Pi 3 or 4 for decent performance. Wireshark(-gtk) will be displa
 
 ## Download
 
-Install as user pi on a fresh Rasbian Buster image (lite prefered) via:
+Install as user pi on a fresh Pi OS legacy image (base on Buster, lite prefered) via:
 
 ```
 wget ct.de/s/x5Pm -O raspion.zip 
@@ -20,6 +20,8 @@ cd raspion
 ```
 
 [Manual download of the zip archive](https://ct.de/projekte/ctraspion/raspion.zip)
+
+Warning: Current Pi OS, based on Debian Bullseye, won't work.
 
 ## Further reading
 
