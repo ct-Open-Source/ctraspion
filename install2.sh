@@ -3,7 +3,7 @@
 #
 # c't-Raspion, a Raspberry Pi based all in one sniffer
 # for judging on IoT and smart home devices activity
-# (c) 2019-2022 c't magazin, Germany, Hannover
+# (c) 2019-2023 c't magazin, Germany, Hannover
 # see: https://ct.de/-4606645 for more information
 #
 
@@ -12,7 +12,10 @@ set -e
 WD=$(pwd)
 LOG=/var/log/raspion.log
 NEWLANG=de_DE.UTF-8
-[[ -f .version ]] && source ./.version || VER=$(git rev-parse --short HEAD)
+[[ -f .version ]] && source ./.version 
+if [ "$VER" == "" ]; then
+  type git > /dev/null 2>&1 && VER=$(git rev-parse --short HEAD)
+fi
 source ./.defaults
 sudo touch $LOG
 sudo chown pi:pi $LOG
