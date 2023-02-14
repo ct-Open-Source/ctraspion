@@ -156,11 +156,7 @@ sudo sed -i "s/DHCP_END=#DHCPv4END#/DHCP_END=$DHCPv4END/" /etc/pihole/setupVars.
 sudo -s <<HERE
 curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended >> $LOG 2>&1
 HERE
-sudo chattr -f -i /etc/init.d/pihole-FTL >> $LOG 2>&1
-sudo cp $WD/files/pihole-FTL /etc/init.d/ >> $LOG 2>&1
-sudo chattr -f +i /etc/init.d/pihole-FTL >> $LOG 2>&1
 sudo systemctl daemon-reload >> $LOG 2>&1
-sudo systemctl restart pihole-FTL >> $LOG 2>&1
 sudo pihole -f restartdns >> $LOG 2>&1
 sudo cp $WD/files/hosts /etc/ >> $LOG 2>&1
 
