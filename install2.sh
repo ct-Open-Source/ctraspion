@@ -124,6 +124,7 @@ echo "* Weboberfläche hinzufügen ..." | tee -a $LOG
 cd /etc/lighttpd/conf-enabled >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-userdir.conf 10-userdir.conf >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-proxy.conf 10-proxy.conf >> $LOG 2>&1
+sudo ln -sf ../conf-available/15-fastcgi-php.conf 15-fastcgi-php.conf >> $LOG 2>&1
 sudo cp $WD/files/10-dir-listing.conf . >> $LOG 2>&1
 sudo -s <<HERE
 echo '\$SERVER["socket"] == ":81" {
