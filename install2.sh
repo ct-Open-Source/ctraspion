@@ -30,7 +30,7 @@ if [ "$VERSION_ID" != "10" ]; then
 fi
 
 echo "* Wifi einschalten" | tee -a $LOG
-rfkill unblock wifi >> $LOG 2>&1
+sudo rfkill unblock wifi >> $LOG 2>&1
 
 echo "* Hilfspakete hinzufügen, Paketlisten aktualisieren" | tee -a $LOG
 sudo dpkg -i $WD/debs/raspion-keyring_2019_all.deb  >> $LOG 2>&1
