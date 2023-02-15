@@ -5,7 +5,6 @@
 # for judging on IoT and smart home devices activity
 # (c) 2019-2023 c't magazin, Germany, Hannover
 # see: https://ct.de/-4606645 for more information
-#
 
 set -e
 
