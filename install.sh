@@ -87,7 +87,7 @@ sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $L
 echo "* Softwaregrundkonfiguration ..." | tee -a $LOG
 sudo usermod -a -G wireshark pi >> $LOG 2>&1
 sudo usermod -a -G www-data pi >> $LOG 2>&1
-sudo cp $WD/files/ntopng.conf /etc/ntopng >> $LOG 2>&1
+sudo cp $WD/files/ntopng.conf /etc/ntopng/ >> $LOG 2>&1
 sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng/ntopng.conf >> $LOG 2>&1
 sudo cp $WD/files/interfaces /etc/network >> $LOG 2>&1
 sudo sed -i "s/^  address #IPv4HOST#/  address $IPv4HOST/" /etc/network/interfaces >> $LOG 2>&1
