@@ -3,16 +3,20 @@
 #
 # c't-Raspion, a Raspberry Pi based all in one sniffer
 # for judging on IoT and smart home devices activity
-# (c) 2019-2020 c't magazin, Germany, Hannover
-# see: https://ct.de/-123456 for more information
-# 
+# (c) 2019-2023 c't magazin, Germany, Hannover
+# see: https://ct.de/-4606645 for more information
+#
 
 set -e
 
 WD=$(pwd)
 LOG=/var/log/raspion.log
 NEWLANG=de_DE.UTF-8
-[[ -f .version ]] && source ./.version || VER=$(git rev-parse --short HEAD)
+[[ -f .version ]] && source ./.version 
+if [ "$VER" == "" ]; then
+  type git > /dev/null 2>&1 && VER=$(git rev-parse --short HEAD)
+fi
+source ./.defaults
 sudo touch $LOG
 sudo chown pi:pi $LOG
 
@@ -22,17 +26,53 @@ error_report() {
 }
 
 echo "==> Einrichtung des c't-Raspion ($VER)" | tee -a $LOG
+source /etc/os-release
+if [ "$VERSION_ID" != "10" ]; then
+  echo "Sorry, Installation funktioniert nur auf Pi OS Legacy (Buster, Version 10)"
+  exit 0
+fi
 
-echo "* Raspbian aktualisieren ..." | tee -a $LOG
+echo "* Wifi einschalten" | tee -a $LOG
+sudo rfkill unblock wifi >> $LOG 2>&1
+
+echo "* Hilfspakete hinzufügen, Paketlisten aktualisieren" | tee -a $LOG
+sudo dpkg -i $WD/debs/raspion-keyring_2019_all.deb  >> $LOG 2>&1
+# dont' install expired apt-ntop_1.0.190416-469_all.deb from debs dir
+# fast fix: download and install a fresh one:
+pushd /tmp >> $LOG 2>&1
+wget https://packages.ntop.org/RaspberryPI/apt-ntop.deb >> $LOG 2>&1
+sudo dpkg -i apt-ntop.deb >> $LOG 2>&1
+popd >> $LOG 2>&1
 sudo apt-get update >> $LOG 2>&1
-sudo apt-get -y dist-upgrade >> $LOG 2>&1
+# the former called apt-get update in postinst
 
-echo "* Raspbian Sprachanpassungen ..." | tee -a $LOG
+echo "* Firewallregeln vorbereiten, Module laden" | tee -a $LOG
+sudo iptables -t nat -F POSTROUTING >> $LOG 2>&1
+sudo ip6tables -t nat -F POSTROUTING >> $LOG 2>&1
+sudo iptables -t nat -F PREROUTING >> $LOG 2>&1
+sudo ip6tables -t nat -F PREROUTING >> $LOG 2>&1
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE >> $LOG 2>&1
+sudo ip6tables -t nat -A POSTROUTING -o eth0 -s $IPv6NET/64 -j MASQUERADE >> $LOG 2>&1
+sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
+sudo ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
+
+echo "* Pakete vorkonfigurieren ..." | tee -a $LOG
+sudo debconf-set-selections debconf/wireshark >> $LOG 2>&1
+sudo debconf-set-selections debconf/iptables-persistent >> $LOG 2>&1
+sudo apt-get install -y iptables-persistent >> $LOG 2>&1
+
+echo "* Firewall-Regeln speichern ..." | tee -a $LOG
+sudo netfilter-persistent save >> $LOG 2>&1
+
+echo "* Pi OS aktualisieren ..." | tee -a $LOG
+sudo apt-get -y --allow-downgrades dist-upgrade >> $LOG 2>&1
+
+echo "* Pi OS Sprachanpassungen ..." | tee -a $LOG
 sudo debconf-set-selections debconf/keyboard-configuration >> $LOG 2>&1
 sudo cp files/keyboard /etc/default >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive keyboard-configuration >> $LOG 2>&1
 
-sudo sed -e "/^[# ]*$NEWLANG/s/^[# ]*//" /etc/locale.gen  >> $LOG 2>&1
+sudo sed -i -e "/^[# ]*$NEWLANG/s/^[# ]*//" /etc/locale.gen  >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive locales >> $LOG 2>&1
 sudo update-locale LANG=$NEWLANG >> $LOG 2>&1
 
@@ -41,39 +81,24 @@ sudo ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime >> $LOG 2>&1
 sudo cp files/timezone /etc >> $LOG 2>&1
 sudo dpkg-reconfigure -fnoninteractive tzdata >> $LOG 2>&1
 
-echo "* Pakete vorkonfigurieren ..." | tee -a $LOG
-sudo debconf-set-selections debconf/wireshark >> $LOG 2>&1
-sudo debconf-set-selections debconf/iptables-persistent >> $LOG 2>&1
-
 echo "* Pakete installieren ..." | tee -a $LOG
-sudo apt-get install -y --no-install-recommends --allow-change-held-packages \
-     hostapd mitmproxy bridge-utils ipv6calc iptables-persistent radvd \
-     shellinabox nmap xsltproc lighttpd tcpreplay pwgen wireshark-gtk >> $LOG 2>&1
-cd /tmp
-wget http://packages.ntop.org/RaspberryPI/apt-ntop_1.0.190416-469_all.deb >> $LOG 2>&1
-sudo dpkg -i apt-ntop_1.0.190416-469_all.deb >> $LOG 2>&1
-sudo apt-get install -y --no-install-recommends ntopng >> $LOG 2>&1
-sudo dpkg -i $WD/debs/*.deb >> $LOG 2>&1
-sudo apt-mark hold wireshark-gtk >> $LOG 2>&1
-sudo apt-mark hold libgtk-3-0 >> $LOG 2>&1
-sudo apt-mark hold libgtk-3-common >> $LOG 2>&1
-sudo apt-mark hold libgtk-3-bin >> $LOG 2>&1
-
-sudo cp $WD/sbin/* /usr/local/sbin >> $LOG 2>&1
-sudo chmod +x /usr/local/sbin/*.sh >> $LOG 2>&1
-sudo cp $WD/files/prefix_delegation /etc/dhcp/dhclient-exit-hooks.d >> $LOG 2>&1
-sudo chmod +x /etc/dhcp/dhclient-exit-hooks.d/prefix_delegation >> $LOG 2>&1
+sudo apt-get install -y --allow-downgrades raspion --no-install-recommends >> $LOG 2>&1
 
 echo "* Softwaregrundkonfiguration ..." | tee -a $LOG
 sudo usermod -a -G wireshark pi >> $LOG 2>&1
 sudo usermod -a -G www-data pi >> $LOG 2>&1
 sudo cp $WD/files/ntopng.conf /etc/ntopng >> $LOG 2>&1
+sudo sed -i "s/^-m=#IPv4NET#/-m=$IPv4NET/" /etc/ntopng/ntopng.conf >> $LOG 2>&1
 sudo cp $WD/files/interfaces /etc/network >> $LOG 2>&1
+sudo sed -i "s/^  address #IPv4HOST#/  address $IPv4HOST/" /etc/network/interfaces >> $LOG 2>&1
+sudo sed -i "s/^  address #IPv6HOST#/  address $IPv6HOST/" /etc/network/interfaces >> $LOG 2>&1
 sudo cp $WD/files/hostapd.conf /etc/hostapd >> $LOG 2>&1
+sudo sed -i "s/^ssid=#SSID#/ssid=$SSID/" /etc/hostapd/hostapd.conf >> $LOG 2>&1
 sudo cp $WD/files/ipforward.conf /etc/sysctl.d >> $LOG 2>&1
 sudo cp $WD/files/hostname /etc/ >> $LOG 2>&1
 sudo cp $WD/files/raspion-sudo /etc/sudoers.d/ >> $LOG 2>&1
 sudo cp $WD/files/radvd.conf /etc/ >> $LOG 2>&1
+sudo sed -i "s/^  RDNSS #IPv6HOST#/  RDNSS $IPv6HOST/" /etc/radvd.conf >> $LOG 2>&1
 sudo mkdir -p /root/.mitmproxy >> $LOG 2>&1
 sudo cp $WD/files/config.yaml /root/.mitmproxy >> $LOG 2>&1
 mkdir -p /home/pi/.config/wireshark >> $LOG 2>&1
@@ -88,17 +113,7 @@ sudo -s <<HERE
 echo "wpa_passphrase=$PW" >> /etc/hostapd/hostapd.conf
 HERE
 
-echo "* Firewall-Regeln setzen und speichern ..." | tee -a $LOG
-sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE >> $LOG 2>&1
-sudo ip6tables -t nat -A POSTROUTING -o eth0 -s fd00:24::/64 -j MASQUERADE >> $LOG 2>&1
-sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
-sudo ip6tables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 81 -i eth0 >> $LOG 2>&1
-sudo netfilter-persistent save >> $LOG 2>&1
-
 echo "* systemd-Units vorbereiten ..." | tee -a $LOG
-sudo cp $WD/files/mitmweb.service /etc/systemd/system >> $LOG 2>&1
-sudo cp $WD/files/broadwayd.service /etc/systemd/system >> $LOG 2>&1
-sudo cp $WD/files/wireshark.service /etc/systemd/system >> $LOG 2>&1
 sudo systemctl enable mitmweb.service >> $LOG 2>&1
 sudo systemctl unmask hostapd >> $LOG 2>&1
 sudo systemctl enable radvd >> $LOG 2>&1
@@ -109,18 +124,26 @@ echo "* Weboberfläche hinzufügen ..." | tee -a $LOG
 cd /etc/lighttpd/conf-enabled >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-userdir.conf 10-userdir.conf >> $LOG 2>&1
 sudo ln -sf ../conf-available/10-proxy.conf 10-proxy.conf >> $LOG 2>&1
+sudo ln -sf ../conf-available/15-fastcgi-php.conf 15-fastcgi-php.conf >> $LOG 2>&1
 sudo cp $WD/files/10-dir-listing.conf . >> $LOG 2>&1
-sudo cp $WD/files/20-extport.conf . >> $LOG 2>&1
-mkdir -p /home/pi/public_html/scans >> $LOG 2>&1
-mkdir -p /home/pi/public_html/caps >> $LOG 2>&1
+sudo -s <<HERE
+echo '\$SERVER["socket"] == ":81" {
+        server.document-root = "/home/pi/public_html"
+        dir-listing.encoding = "utf-8"
+        \$HTTP["url"] =~ "^/caps(\$|/)" {
+            dir-listing.activate = "enable" 
+        }
+        \$HTTP["url"] =~ "^/scans(\$|/)" {
+           dir-listing.activate = "enable" 
+        }
+        \$HTTP["url"] =~ "^/admin" {
+                proxy.server = ( "" => (( "host" => "'$IPv4HOST'", "port" => "80")) )
+        }
+}' > /etc/lighttpd/conf-enabled/20-extport.conf
+HERE
 sudo chmod g+s /home/pi/public_html/caps >> $LOG 2>&1
 sudo chmod 777 /home/pi/public_html/caps >> $LOG 2>&1
 sudo chgrp www-data /home/pi/public_html/caps >> $LOG 2>&1
-cp $WD/files/*.png /home/pi/public_html >> $LOG 2>&1
-cp $WD/files/*.php /home/pi/public_html >> $LOG 2>&1
-cp $WD/files/*.css /home/pi/public_html >> $LOG 2>&1
-cp $WD/files/*.js /home/pi/public_html >> $LOG 2>&1
-cp $WD/files/*.ico /home/pi/public_html >> $LOG 2>&1
 
 echo "* Pi-hole installieren ..." | tee -a $LOG
 if ! id pihole >/dev/null 2>&1; then
@@ -129,14 +152,15 @@ fi
 sudo mkdir -p /etc/pihole >> $LOG 2>&1
 sudo chown pihole:pihole /etc/pihole >> $LOG 2>&1
 sudo cp $WD/files/setupVars.conf /etc/pihole >> $LOG 2>&1
+sudo sed -i "s/IPV4_ADDRESS=#IPv4HOST#/IPV4_ADDRESS=$IPv4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/IPV6_ADDRESS=#IPv6HOST#/IPV6_ADDRESS=$IPv6HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/DHCP_ROUTER=#IPv4HOST#/DHCP_ROUTER=$IPv4HOST/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/DHCP_START=#DHCPv4START#/DHCP_START=$DHCPv4START/" /etc/pihole/setupVars.conf >> $LOG 2>&1
+sudo sed -i "s/DHCP_END=#DHCPv4END#/DHCP_END=$DHCPv4END/" /etc/pihole/setupVars.conf >> $LOG 2>&1
 sudo -s <<HERE
 curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended >> $LOG 2>&1
 HERE
-sudo chattr -f -i /etc/init.d/pihole-FTL >> $LOG 2>&1
-sudo cp $WD/files/pihole-FTL /etc/init.d/ >> $LOG 2>&1
-sudo chattr -f +i /etc/init.d/pihole-FTL >> $LOG 2>&1
 sudo systemctl daemon-reload >> $LOG 2>&1
-sudo systemctl restart pihole-FTL >> $LOG 2>&1
 sudo pihole -f restartdns >> $LOG 2>&1
 sudo cp $WD/files/hosts /etc/ >> $LOG 2>&1
 
